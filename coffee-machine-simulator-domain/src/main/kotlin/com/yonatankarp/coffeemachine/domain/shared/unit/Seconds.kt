@@ -6,8 +6,7 @@ import kotlin.math.max
 @JvmInline
 value class Seconds(
     override val value: Double,
-) : Units,
-    Comparable<Seconds> {
+) : Units<Seconds> {
     init {
         require(value >= 0.0) { "Time cannot be negative" }
     }
@@ -24,31 +23,6 @@ value class Seconds(
         require(k != 0.0) { "Cannot divide by zero" }
         return Seconds(value / k)
     }
-
-    /** Dimensionless ratio (e.g., phase scaling). */
-    operator fun div(other: Seconds): Double {
-        require(other.value != 0.0) { "Cannot divide by zero seconds" }
-        return value / other.value
-    }
-
-    fun approxEquals(
-        other: Seconds,
-        epsilon: Double = DEFAULT_EPSILON,
-    ): Boolean = value.approxEquals(other.value, epsilon)
-
-    fun coerceAtLeast(minimum: Seconds): Seconds = if (this < minimum) minimum else this
-
-    fun coerceAtMost(maximum: Seconds): Seconds = if (this > maximum) maximum else this
-
-    fun coerceIn(
-        minimum: Seconds,
-        maximum: Seconds,
-    ): Seconds =
-        when {
-            this < minimum -> minimum
-            this > maximum -> maximum
-            else -> this
-        }
 
     override fun toString(): String = value.format("%.1f s")
 

@@ -6,8 +6,7 @@ import kotlin.math.max
 @JvmInline
 value class Bar(
     override val value: Double,
-) : Units,
-    Comparable<Bar> {
+) : Units<Bar> {
     init {
         require(value >= 0.0) { "Pressure cannot be negative" }
     }
@@ -24,25 +23,6 @@ value class Bar(
         require(k != 0.0) { "Cannot divide by zero" }
         return Bar(value / k)
     }
-
-    fun approxEquals(
-        other: Bar,
-        epsilon: Double = DEFAULT_EPSILON,
-    ): Boolean = value.approxEquals(other.value, epsilon)
-
-    fun coerceAtLeast(minimum: Bar): Bar = if (this < minimum) minimum else this
-
-    fun coerceAtMost(maximum: Bar): Bar = if (this > maximum) maximum else this
-
-    fun coerceIn(
-        minimum: Bar,
-        maximum: Bar,
-    ): Bar =
-        when {
-            this < minimum -> minimum
-            this > maximum -> maximum
-            else -> this
-        }
 
     override fun toString(): String = value.format("%.2f bar")
 

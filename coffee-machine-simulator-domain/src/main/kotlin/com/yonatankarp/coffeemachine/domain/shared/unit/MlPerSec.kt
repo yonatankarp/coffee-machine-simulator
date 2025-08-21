@@ -6,8 +6,7 @@ import kotlin.math.max
 @JvmInline
 value class MlPerSec(
     override val value: Double,
-) : Units,
-    Comparable<MlPerSec> {
+) : Units<MlPerSec> {
     init {
         require(value >= 0.0) { "Flow cannot be negative" }
     }
@@ -24,25 +23,6 @@ value class MlPerSec(
         require(k != 0.0) { "Cannot divide by zero" }
         return MlPerSec(value / k)
     }
-
-    fun approxEquals(
-        other: MlPerSec,
-        epsilon: Double = DEFAULT_EPSILON,
-    ): Boolean = value.approxEquals(other.value, epsilon)
-
-    fun coerceAtLeast(minimum: MlPerSec): MlPerSec = if (this < minimum) minimum else this
-
-    fun coerceAtMost(maximum: MlPerSec): MlPerSec = if (this > maximum) maximum else this
-
-    fun coerceIn(
-        minimum: MlPerSec,
-        maximum: MlPerSec,
-    ): MlPerSec =
-        when {
-            this < minimum -> minimum
-            this > maximum -> maximum
-            else -> this
-        }
 
     override fun toString(): String = value.format("%.2f ml/s")
 

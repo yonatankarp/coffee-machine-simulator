@@ -6,8 +6,7 @@ import kotlin.math.max
 @JvmInline
 value class Milliliters(
     override val value: Double,
-) : Units,
-    Comparable<Milliliters> {
+) : Units<Milliliters> {
     init {
         require(value >= 0.0) { "Volume cannot be negative" }
     }
@@ -29,25 +28,6 @@ value class Milliliters(
         require(other.value != 0.0) { "Cannot divide by zero ml" }
         return value / other.value
     }
-
-    fun approxEquals(
-        other: Milliliters,
-        epsilon: Double = DEFAULT_EPSILON,
-    ): Boolean = value.approxEquals(other.value, epsilon)
-
-    fun coerceAtLeast(minimum: Milliliters): Milliliters = if (this < minimum) minimum else this
-
-    fun coerceAtMost(maximum: Milliliters): Milliliters = if (this > maximum) maximum else this
-
-    fun coerceIn(
-        minimum: Milliliters,
-        maximum: Milliliters,
-    ): Milliliters =
-        when {
-            this < minimum -> minimum
-            this > maximum -> maximum
-            else -> this
-        }
 
     override fun toString(): String = value.format("%.0f ml")
 

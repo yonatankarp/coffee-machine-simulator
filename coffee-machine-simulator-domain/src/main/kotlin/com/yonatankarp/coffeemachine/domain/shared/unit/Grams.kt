@@ -6,8 +6,7 @@ import kotlin.math.max
 @JvmInline
 value class Grams(
     override val value: Double,
-) : Units,
-    Comparable<Grams> {
+) : Units<Grams> {
     init {
         require(value >= 0.0) { "Mass cannot be negative" }
     }
@@ -29,25 +28,6 @@ value class Grams(
         require(other.value != 0.0) { "Cannot divide by zero grams" }
         return value / other.value
     }
-
-    fun approxEquals(
-        other: Grams,
-        epsilon: Double = DEFAULT_EPSILON,
-    ): Boolean = value.approxEquals(other.value, epsilon)
-
-    fun coerceAtLeast(minimum: Grams): Grams = if (this < minimum) minimum else this
-
-    fun coerceAtMost(maximum: Grams): Grams = if (this > maximum) maximum else this
-
-    fun coerceIn(
-        minimum: Grams,
-        maximum: Grams,
-    ): Grams =
-        when {
-            this < minimum -> minimum
-            this > maximum -> maximum
-            else -> this
-        }
 
     override fun toString(): String = value.format("%.1f g")
 
