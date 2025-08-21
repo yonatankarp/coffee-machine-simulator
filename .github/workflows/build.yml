@@ -3,8 +3,6 @@ name: Continuous Integration
 on:
   pull_request:
     types: [ opened, synchronize, reopened, ready_for_review ]
-  pull_request_target:
-    types: [ opened, synchronize, reopened, ready_for_review ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.job }}-${{ github.ref }}
@@ -15,7 +13,7 @@ jobs:
     uses: yonatankarp/github-actions/.github/workflows/ci.yml@v1
     with:
       build_dockerfile: false
-      app_name: ${{ matrix.service }}
+      app_name: .
 
   dependabot_auto_merge:
     needs: pipeline

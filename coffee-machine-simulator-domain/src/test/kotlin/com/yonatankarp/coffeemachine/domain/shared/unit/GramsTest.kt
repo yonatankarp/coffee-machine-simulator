@@ -28,9 +28,10 @@ class GramsTest {
 
     @Test
     fun `reject negative mass`() {
-        val ex = assertFailsWith<IllegalArgumentException> {
-            Grams(-0.001)
-        }
+        val ex =
+            assertFailsWith<IllegalArgumentException> {
+                Grams(-0.001)
+            }
         assertEquals("Mass cannot be negative", ex.message)
     }
 }

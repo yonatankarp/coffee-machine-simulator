@@ -1,7 +1,9 @@
 [versions]
 jvmTarget = "21"
 kotlin = "2.2.10"
+spotless = "7.2.1"
 
 [plugins]
 
 kotlin_jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

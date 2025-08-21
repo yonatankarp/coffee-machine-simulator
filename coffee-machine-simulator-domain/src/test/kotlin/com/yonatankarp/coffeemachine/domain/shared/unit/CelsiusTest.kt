@@ -1,7 +1,7 @@
 package com.yonatankarp.coffeemachine.domain.shared.unit
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 class CelsiusTest {
@@ -13,9 +13,10 @@ class CelsiusTest {
 
     @Test
     fun `reject temperature below absolute zero`() {
-        val ex = assertFailsWith<IllegalArgumentException> {
-            Celsius(-273.151)
-        }
+        val ex =
+            assertFailsWith<IllegalArgumentException> {
+                Celsius(-273.151)
+            }
         assertEquals("Temperature below absolute zero", ex.message)
     }
 

@@ -24,17 +24,19 @@ class SecondsTest {
 
     @Test
     fun `reject negative seconds`() {
-        val ex = assertFailsWith<IllegalArgumentException> {
-            Seconds(-0.0001)
-        }
+        val ex =
+            assertFailsWith<IllegalArgumentException> {
+                Seconds(-0.0001)
+            }
         assertEquals("Time cannot be negative", ex.message)
     }
 
     @Test
     fun `fromMillis rejects negative durations`() {
-        val ex = assertFailsWith<IllegalArgumentException> {
-            Seconds.fromMillis(-1L)
-        }
+        val ex =
+            assertFailsWith<IllegalArgumentException> {
+                Seconds.fromMillis(-1L)
+            }
         assertEquals("Duration cannot be negative", ex.message)
     }
 }

@@ -4,7 +4,10 @@ import com.yonatankarp.coffeemachine.domain.shared.extension.FormatExtensions.fo
 import kotlin.math.max
 
 @JvmInline
-value class Grams(override val value: Double) : Units, Comparable<Grams> {
+value class Grams(
+    override val value: Double,
+) : Units,
+    Comparable<Grams> {
     init {
         require(value >= 0.0) { "Mass cannot be negative" }
     }
@@ -12,9 +15,11 @@ value class Grams(override val value: Double) : Units, Comparable<Grams> {
     override fun compareTo(other: Grams): Int = value.compareTo(other.value)
 
     operator fun plus(other: Grams): Grams = Grams(value + other.value)
+
     operator fun minus(other: Grams): Grams = Grams(max(0.0, value - other.value))
 
     operator fun times(k: Double): Grams = Grams(value * k)
+
     operator fun div(k: Double): Grams {
         require(k != 0.0) { "Cannot divide by zero" }
         return Grams(value / k)
@@ -25,12 +30,19 @@ value class Grams(override val value: Double) : Units, Comparable<Grams> {
         return value / other.value
     }
 
-    fun approxEquals(other: Grams, epsilon: Double = DEFAULT_EPSILON): Boolean =
-        value.approxEquals(other.value, epsilon)
+    fun approxEquals(
+        other: Grams,
+        epsilon: Double = DEFAULT_EPSILON,
+    ): Boolean = value.approxEquals(other.value, epsilon)
 
     fun coerceAtLeast(minimum: Grams): Grams = if (this < minimum) minimum else this
+
     fun coerceAtMost(maximum: Grams): Grams = if (this > maximum) maximum else this
-    fun coerceIn(minimum: Grams, maximum: Grams): Grams =
+
+    fun coerceIn(
+        minimum: Grams,
+        maximum: Grams,
+    ): Grams =
         when {
             this < minimum -> minimum
             this > maximum -> maximum

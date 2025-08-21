@@ -9,22 +9,25 @@ sealed interface Units {
 
     fun Double.approxEquals(
         other: Double,
-        epsilon: Double = DEFAULT_EPSILON
-    ): Boolean =
-        abs(this - other) <= epsilon
+        epsilon: Double = DEFAULT_EPSILON,
+    ): Boolean = abs(this - other) <= epsilon
 
     data class Range<T>(
         override val start: T,
-        override val endInclusive: T
+        override val endInclusive: T,
     ) : ClosedRange<T> where T : Units, T : Comparable<T> {
         init {
             require(start <= endInclusive) { "Range start must be <= endInclusive" }
         }
     }
 
-    fun <T> minOf(a: T, b: T): T where T : Units, T : Comparable<T> =
-        if (a <= b) a else b
+    fun <T> minOf(
+        a: T,
+        b: T,
+    ): T where T : Units, T : Comparable<T> = if (a <= b) a else b
 
-    fun <T> maxOf(a: T, b: T): T where T : Units, T : Comparable<T> =
-        if (a >= b) a else b
+    fun <T> maxOf(
+        a: T,
+        b: T,
+    ): T where T : Units, T : Comparable<T> = if (a >= b) a else b
 }

@@ -1,7 +1,7 @@
 package com.yonatankarp.coffeemachine.domain.shared.unit
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 class BarTest {
@@ -13,9 +13,10 @@ class BarTest {
 
     @Test
     fun `reject negative pressure`() {
-        val ex = assertFailsWith<IllegalArgumentException> {
-            Bar(-0.0001)
-        }
+        val ex =
+            assertFailsWith<IllegalArgumentException> {
+                Bar(-0.0001)
+            }
         assertEquals("Pressure cannot be negative", ex.message)
     }
 

@@ -4,7 +4,10 @@ import com.yonatankarp.coffeemachine.domain.shared.extension.FormatExtensions.fo
 import kotlin.math.max
 
 @JvmInline
-value class Milliliters(override val value: Double) : Units, Comparable<Milliliters> {
+value class Milliliters(
+    override val value: Double,
+) : Units,
+    Comparable<Milliliters> {
     init {
         require(value >= 0.0) { "Volume cannot be negative" }
     }
@@ -12,9 +15,11 @@ value class Milliliters(override val value: Double) : Units, Comparable<Millilit
     override fun compareTo(other: Milliliters): Int = value.compareTo(other.value)
 
     operator fun plus(other: Milliliters): Milliliters = Milliliters(value + other.value)
+
     operator fun minus(other: Milliliters): Milliliters = Milliliters(max(0.0, value - other.value))
 
     operator fun times(k: Double): Milliliters = Milliliters(value * k)
+
     operator fun div(k: Double): Milliliters {
         require(k != 0.0) { "Cannot divide by zero" }
         return Milliliters(value / k)
@@ -25,12 +30,19 @@ value class Milliliters(override val value: Double) : Units, Comparable<Millilit
         return value / other.value
     }
 
-    fun approxEquals(other: Milliliters, epsilon: Double = DEFAULT_EPSILON): Boolean =
-        value.approxEquals(other.value, epsilon)
+    fun approxEquals(
+        other: Milliliters,
+        epsilon: Double = DEFAULT_EPSILON,
+    ): Boolean = value.approxEquals(other.value, epsilon)
 
     fun coerceAtLeast(minimum: Milliliters): Milliliters = if (this < minimum) minimum else this
+
     fun coerceAtMost(maximum: Milliliters): Milliliters = if (this > maximum) maximum else this
-    fun coerceIn(minimum: Milliliters, maximum: Milliliters): Milliliters =
+
+    fun coerceIn(
+        minimum: Milliliters,
+        maximum: Milliliters,
+    ): Milliliters =
         when {
             this < minimum -> minimum
             this > maximum -> maximum
@@ -41,6 +53,7 @@ value class Milliliters(override val value: Double) : Units, Comparable<Millilit
 
     companion object {
         val ZERO = Milliliters(0.0)
+
         fun fromLiters(liters: Double): Milliliters {
             require(liters >= 0.0) { "Volume cannot be negative" }
             return Milliliters(liters * 1000.0)
