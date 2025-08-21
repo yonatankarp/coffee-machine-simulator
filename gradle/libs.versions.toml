@@ -1,6 +1,6 @@
 [versions]
 jvmTarget = "21"
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 
 [plugins]
 
