@@ -1,37 +1,183 @@
 package com.yonatankarp.coffeemachine.domain.shared.unit
 
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class GramsTest {
     @Test
-    fun `string uses one decimal and g suffix`() {
-        val g = Grams(18.04)
-        assertEquals("18.0 g", g.toString())
-    }
+    fun `formats with one decimal and g suffix`() {
+        // Given
+        val input = 18.04
 
-    @Test
-    fun `sum of grams adds values`() {
-        val a = Grams(7.5)
-        val b = Grams(2.4)
-        assertEquals(Grams(9.9).toString(), (a + b).toString())
-    }
+        // When
+        val grams = Grams(input)
+        val rendered = grams.toString()
 
-    @Test
-    fun `minus saturates at zero`() {
-        val a = Grams(7.0)
-        val b = Grams(8.0)
-        val c = a - b
-        assertEquals(Grams(0.0).toString(), c.toString())
+        // Then
+        rendered shouldBe "18.0 g"
     }
 
     @Test
     fun `reject negative mass`() {
-        val ex =
-            assertFailsWith<IllegalArgumentException> {
-                Grams(-0.001)
-            }
-        assertEquals("Mass cannot be negative", ex.message)
+        // Given
+        val input = -0.001
+
+        // When
+        val ex = shouldThrow<IllegalArgumentException> { Grams(input) }
+
+        // Then
+        ex.message shouldBe "Mass cannot be negative"
+    }
+
+    @Test
+    fun `ZERO constant equals 0_0 grams`() {
+        // Given
+        val expected = Grams(0.0)
+
+        // When
+        val zero = Grams.ZERO
+
+        // Then
+        zero shouldBe expected
+    }
+
+    @Nested
+    inner class Arithmetic {
+        @Test
+        fun `plus adds values`() {
+            // Given
+            val a = Grams(7.5)
+            val b = Grams(2.4)
+
+            // When
+            val sum = a + b
+
+            // Then
+            sum shouldBe Grams(9.9)
+        }
+
+        @Test
+        fun `minus subtracts when result positive`() {
+            // Given
+            val a = Grams(10.0)
+            val b = Grams(3.0)
+
+            // When
+            val diff = a - b
+
+            // Then
+            diff shouldBe Grams(7.0)
+        }
+
+        @Test
+        fun `minus saturates at zero when result negative`() {
+            // Given
+            val a = Grams(7.0)
+            val b = Grams(8.0)
+
+            // When
+            val diff = a - b
+
+            // Then
+            diff shouldBe Grams(0.0)
+        }
+
+        @Test
+        fun `times scales by factor`() {
+            // Given
+            val g = Grams(12.0)
+            val k = 1.5
+
+            // When
+            val scaled = g * k
+
+            // Then
+            scaled shouldBe Grams(18.0)
+        }
+    }
+
+    @Nested
+    inner class DivisionByScalar {
+        @Test
+        fun `div scales down by factor`() {
+            // Given
+            val g = Grams(12.0)
+            val k = 2.0
+
+            // When
+            val scaled = g / k
+
+            // Then
+            scaled shouldBe Grams(6.0)
+        }
+
+        @Test
+        fun `div by zero throws`() {
+            // Given
+            val g = Grams(12.0)
+
+            // When
+            val ex = shouldThrow<IllegalArgumentException> { g / 0.0 }
+
+            // Then
+            ex.message shouldBe "Cannot divide by zero"
+        }
+    }
+
+    @Nested
+    inner class RatioDivision {
+        @Test
+        fun `div by grams returns dimensionless ratio`() {
+            // Given
+            val numerator = Grams(20.0)
+            val denominator = Grams(4.0)
+
+            // When
+            val ratio = numerator / denominator
+
+            // Then
+            ratio shouldBe 5.0
+        }
+
+        @Test
+        fun `div by zero grams throws`() {
+            // Given
+            val numerator = Grams(20.0)
+            val denominator = Grams(0.0)
+
+            // When
+            val ex = shouldThrow<IllegalArgumentException> { numerator / denominator }
+
+            // Then
+            ex.message shouldBe "Cannot divide by zero grams"
+        }
+
+        @Test
+        fun `should return minimum of two Gram values`() {
+            // Given
+            val a = Grams(10.0)
+            val b = Grams(5.0)
+
+            // When
+            val min = minOf(a, b)
+
+            // Then
+            min shouldBe Grams(5.0)
+        }
+
+        @Test
+        fun `should return maximum of two Gram values`() {
+            // Given
+            val a = Grams(10.0)
+            val b = Grams(5.0)
+
+            // When
+            val max = maxOf(a, b)
+
+            // Then
+            max shouldBe Grams(10.0)
+        }
     }
 }
