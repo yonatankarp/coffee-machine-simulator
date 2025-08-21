@@ -4,7 +4,10 @@ import com.yonatankarp.coffeemachine.domain.shared.extension.FormatExtensions.fo
 import kotlin.math.max
 
 @JvmInline
-value class Seconds(override val value: Double) : Units, Comparable<Seconds> {
+value class Seconds(
+    override val value: Double,
+) : Units,
+    Comparable<Seconds> {
     init {
         require(value >= 0.0) { "Time cannot be negative" }
     }
@@ -12,9 +15,11 @@ value class Seconds(override val value: Double) : Units, Comparable<Seconds> {
     override fun compareTo(other: Seconds): Int = value.compareTo(other.value)
 
     operator fun plus(other: Seconds): Seconds = Seconds(value + other.value)
+
     operator fun minus(other: Seconds): Seconds = Seconds(max(0.0, value - other.value))
 
     operator fun times(k: Double): Seconds = Seconds(value * k)
+
     operator fun div(k: Double): Seconds {
         require(k != 0.0) { "Cannot divide by zero" }
         return Seconds(value / k)
@@ -26,12 +31,19 @@ value class Seconds(override val value: Double) : Units, Comparable<Seconds> {
         return value / other.value
     }
 
-    fun approxEquals(other: Seconds, epsilon: Double = DEFAULT_EPSILON): Boolean =
-        value.approxEquals(other.value, epsilon)
+    fun approxEquals(
+        other: Seconds,
+        epsilon: Double = DEFAULT_EPSILON,
+    ): Boolean = value.approxEquals(other.value, epsilon)
 
     fun coerceAtLeast(minimum: Seconds): Seconds = if (this < minimum) minimum else this
+
     fun coerceAtMost(maximum: Seconds): Seconds = if (this > maximum) maximum else this
-    fun coerceIn(minimum: Seconds, maximum: Seconds): Seconds =
+
+    fun coerceIn(
+        minimum: Seconds,
+        maximum: Seconds,
+    ): Seconds =
         when {
             this < minimum -> minimum
             this > maximum -> maximum
@@ -42,6 +54,7 @@ value class Seconds(override val value: Double) : Units, Comparable<Seconds> {
 
     companion object {
         val ZERO = Seconds(0.0)
+
         fun fromMillis(millis: Long): Seconds {
             require(millis >= 0) { "Duration cannot be negative" }
             return Seconds(millis / 1000.0)

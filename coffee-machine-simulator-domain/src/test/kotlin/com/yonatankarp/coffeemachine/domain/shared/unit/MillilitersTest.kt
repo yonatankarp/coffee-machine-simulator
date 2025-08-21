@@ -13,9 +13,10 @@ class MillilitersTest {
 
     @Test
     fun `reject negative volume`() {
-        val ex = assertFailsWith<IllegalArgumentException> {
-            Milliliters(-1.0)
-        }
+        val ex =
+            assertFailsWith<IllegalArgumentException> {
+                Milliliters(-1.0)
+            }
         assertEquals("Volume cannot be negative", ex.message)
     }
 

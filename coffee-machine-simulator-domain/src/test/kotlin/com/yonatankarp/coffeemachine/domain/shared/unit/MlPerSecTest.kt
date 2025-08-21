@@ -1,7 +1,7 @@
 package com.yonatankarp.coffeemachine.domain.shared.unit
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import kotlin.test.assertFailsWith
 
 class MlPerSecTest {
@@ -13,9 +13,10 @@ class MlPerSecTest {
 
     @Test
     fun `reject negative flow`() {
-        val ex = assertFailsWith<IllegalArgumentException> {
-            MlPerSec(-0.01)
-        }
+        val ex =
+            assertFailsWith<IllegalArgumentException> {
+                MlPerSec(-0.01)
+            }
         assertEquals("Flow cannot be negative", ex.message)
     }
 
