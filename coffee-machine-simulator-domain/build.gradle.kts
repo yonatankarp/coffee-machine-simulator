@@ -8,7 +8,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.bundles.unittest.all)
 }
 
 tasks.test {
