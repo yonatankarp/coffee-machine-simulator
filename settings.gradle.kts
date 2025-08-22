@@ -1,7 +1,7 @@
-rootProject.name = "coffee-machine-simulator"
+rootProject.name = "coffee-machine"
 
 include(
-    "coffee-machine-simulator-domain",
-    "coffee-machine-simulator-application",
-    "coffee-machine-simulator-adapters"
+    "coffee-machine-domain",
+    "coffee-machine-application",
+    "coffee-machine-adapters"
 )
