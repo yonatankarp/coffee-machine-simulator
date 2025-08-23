@@ -14,7 +14,7 @@ data class CoffeeMachine(
 
     fun powerOff() = copy(poweredOn = false)
 
-    fun withTanks(
+    fun with(
         waterTank: WaterTank = this.waterTank,
         beanHopper: BeanHopper = this.beanHopper,
         wasteBin: WasteBin = this.wasteBin,
@@ -46,7 +46,7 @@ data class CoffeeMachine(
         events += DomainEvent.BrewCompleted(recipe.name)
 
         val updated =
-            withTanks(
+            with(
                 waterTank = newWater,
                 beanHopper = newBeans,
                 wasteBin = newWaste,
@@ -56,9 +56,9 @@ data class CoffeeMachine(
 
     fun refill(type: RefillType): CoffeeMachine =
         when (type) {
-            RefillType.WATER -> withTanks(waterTank = waterTank.refill())
-            RefillType.BEANS -> withTanks(beanHopper = beanHopper.refill())
-            RefillType.WASTE -> withTanks(wasteBin = wasteBin.empty())
+            RefillType.WATER -> with(waterTank = waterTank.refill())
+            RefillType.BEANS -> with(beanHopper = beanHopper.refill())
+            RefillType.WASTE -> with(wasteBin = wasteBin.empty())
         }
 
     @JvmInline

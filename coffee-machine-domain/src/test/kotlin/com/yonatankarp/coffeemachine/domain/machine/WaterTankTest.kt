@@ -1,6 +1,7 @@
 package com.yonatankarp.coffeemachine.domain.machine
 
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
+import com.yonatankarp.coffeemachine.domain.shared.unit.MillilitersFixture
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -9,8 +10,8 @@ class WaterTankTest {
     @Test
     fun `cannot construct tank with current greater than capacity`() {
         // Given
-        val capacity = Milliliters(100.0)
-        val current = Milliliters(150.0)
+        val capacity = MillilitersFixture.fiveHundred
+        val current = MillilitersFixture.oneThousand
 
         // When
         val ex =
@@ -25,44 +26,35 @@ class WaterTankTest {
     @Test
     fun `consume reduces current by the requested amount`() {
         // Given
-        val tank =
-            WaterTank(
-                capacity = Milliliters(100.0),
-                current = Milliliters(80.0),
-            )
-        val amount = Milliliters(10.0)
+        val tank = WaterTankFixture.used
+        val amount = MillilitersFixture.ten
 
         // When
         val after = tank.consume(amount)
 
         // Then
-        after.current.value shouldBe 70.0
-        tank.current.value shouldBe 80.0
+        after.current shouldBe MillilitersFixture.fourHundredNinety
+        tank.current shouldBe MillilitersFixture.fiveHundred
     }
 
     @Test
     fun `consume can bring current to exactly zero`() {
         // Given
-        val tank =
-            WaterTank(capacity = Milliliters(50.0), current = Milliliters(20.0))
-        val amount = Milliliters(20.0)
+        val tank = WaterTankFixture.full
+        val amount = MillilitersFixture.oneThousand
 
         // When
         val after = tank.consume(amount)
 
         // Then
-        after.current.value shouldBe 0.0
+        after.current shouldBe Milliliters.ZERO
     }
 
     @Test
     fun `consume beyond current throws with precise message`() {
         // Given
-        val tank =
-            WaterTank(
-                capacity = Milliliters(100.0),
-                current = Milliliters(30.0),
-            )
-        val amount = Milliliters(40.0)
+        val tank = WaterTankFixture.used
+        val amount = MillilitersFixture.sixHundred
 
         // When
         val ex =
@@ -77,17 +69,13 @@ class WaterTankTest {
     @Test
     fun `refill sets current to capacity`() {
         // Given
-        val tank =
-            WaterTank(
-                capacity = Milliliters(200.0),
-                current = Milliliters(25.0),
-            )
+        val tank = WaterTankFixture.used
 
         // When
         val after = tank.refill()
 
         // Then
-        after.current.value shouldBe 200.0
-        tank.current.value shouldBe 25.0
+        after.current shouldBe MillilitersFixture.oneThousand
+        tank.current shouldBe MillilitersFixture.fiveHundred
     }
 }

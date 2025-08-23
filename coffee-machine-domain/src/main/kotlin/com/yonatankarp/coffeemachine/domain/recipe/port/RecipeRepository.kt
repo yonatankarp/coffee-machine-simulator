@@ -3,7 +3,7 @@ package com.yonatankarp.coffeemachine.domain.recipe.port
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 
 interface RecipeRepository {
-    fun findByName(name: String): Recipe?
+    fun findByName(name: Recipe.Name): Recipe?
 
     fun list(): List<Recipe>
 }
