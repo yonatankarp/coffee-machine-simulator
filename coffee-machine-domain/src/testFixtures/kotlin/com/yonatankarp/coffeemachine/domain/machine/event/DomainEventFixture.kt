@@ -1,7 +1,9 @@
 package com.yonatankarp.coffeemachine.domain.machine.event
 
+import kotlin.reflect.KClass
+
 object DomainEventFixture {
-    val eventClasses =
+    val eventClasses: List<KClass<out DomainEvent>> =
         listOf(
             DomainEvent.HeatingRequested::class,
             DomainEvent.GrindingRequested::class,

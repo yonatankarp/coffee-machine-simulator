@@ -14,6 +14,10 @@ data class CoffeeMachine(
 
     fun powerOff() = copy(poweredOn = false)
 
+    /**
+     * Convenience wrapper over [copy] to replace one or more components while preserving the rest.
+     * Note: This is a member function and not the Kotlin stdlib `with(receiver) { }`.
+     */
     fun with(
         waterTank: WaterTank = this.waterTank,
         beanHopper: BeanHopper = this.beanHopper,

@@ -1,18 +1,19 @@
 package com.yonatankarp.coffeemachine.domain.recipe
 
-import com.yonatankarp.coffeemachine.domain.shared.unit.Celsius
-import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
-import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
-import com.yonatankarp.coffeemachine.domain.shared.unit.Seconds
+import com.yonatankarp.coffeemachine.domain.shared.unit.BrewSecondsFixture
+import com.yonatankarp.coffeemachine.domain.shared.unit.CelsiusFixture
+import com.yonatankarp.coffeemachine.domain.shared.unit.GramsFixture
+import com.yonatankarp.coffeemachine.domain.shared.unit.MillilitersFixture
 
 object RecipeFixture {
-    val espresso =
-        Recipe(
-            name = Recipe.Name("espresso"),
-            water = Milliliters(30.0),
-            beans = Grams(9.0),
-            temperature = Celsius(93.0),
-            grind = Recipe.GrindSize.FINE,
-            brewSeconds = BrewSeconds(Seconds(28.0)),
-        )
+    val espresso: Recipe
+        get() =
+            Recipe(
+                name = Recipe.Name("espresso"),
+                water = MillilitersFixture.thirty,
+                beans = GramsFixture.nine,
+                temperature = CelsiusFixture.nintyThree,
+                grind = Recipe.GrindSize.FINE,
+                brewSeconds = BrewSecondsFixture.twentyEight,
+            )
 }

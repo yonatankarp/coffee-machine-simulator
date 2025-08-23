@@ -1,11 +1,11 @@
 package com.yonatankarp.coffeemachine.domain.machine
 
 object CoffeeMachineFixture {
-    val defaultModel = CoffeeMachine.Model("KotlinBarista 3000")
+    val defaultModel get() = CoffeeMachine.Model("KotlinBarista 3000")
 
-    val poweredMachine = defaultMachine(powered = true)
+    val poweredMachine get() = defaultMachine(powered = true)
 
-    val unpoweredMachine = defaultMachine(powered = false)
+    val unpoweredMachine get() = defaultMachine(powered = false)
 
     fun defaultMachine(
         model: CoffeeMachine.Model = defaultModel,
