@@ -14,14 +14,8 @@ data class Recipe(
 ) {
     enum class GrindSize { FINE, MEDIUM, COARSE }
 
-    @JvmInline
-    value class Name(
-        val value: String,
-    ) {
-        init {
-            require(value.isNotBlank()) { "Recipe name cannot be blank" }
-        }
-
-        override fun toString(): String = value
+    enum class Name {
+        ESPRESSO,
+        AMERICANO,
     }
 }

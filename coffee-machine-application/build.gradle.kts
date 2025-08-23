@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":coffee-machine-domain"))
     testImplementation(kotlin("test"))
     testImplementation(libs.bundles.unittest.all)
+    testImplementation(testFixtures(project(":coffee-machine-domain")))
 }
 
 tasks.test {
