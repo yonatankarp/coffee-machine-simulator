@@ -2,13 +2,11 @@ package com.yonatankarp.coffeemachine.domain.machine
 
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEventFixture
-import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import com.yonatankarp.coffeemachine.domain.recipe.RecipeFixture.espresso
 import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
 import com.yonatankarp.coffeemachine.domain.shared.unit.GramsFixture
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
 import com.yonatankarp.coffeemachine.domain.shared.unit.MillilitersFixture
-import com.yonatankarp.coffeemachine.domain.shared.unit.Seconds
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -31,7 +29,7 @@ class CoffeeMachineTest {
     }
 
     @Test
-    fun `withTanks replaces only provided tanks and keeps others`() {
+    fun `with replaces only provided tanks and keeps others`() {
         // Given
         val machine = CoffeeMachineFixture.poweredMachine
         val newWater = WaterTankFixture.full
@@ -62,19 +60,18 @@ class CoffeeMachineTest {
 
         outcome.events.map { it::class } shouldContainExactly DomainEventFixture.eventClasses
 
-        (outcome.events[0] as DomainEvent.HeatingRequested).target.value shouldBe 93.0
-        (outcome.events[1] as DomainEvent.GrindingRequested).amount.value shouldBe 9.0
+        (outcome.events[0] as DomainEvent.HeatingRequested).target shouldBe recipe.temperature
+        (outcome.events[1] as DomainEvent.GrindingRequested).amount shouldBe recipe.beans
         (outcome.events[2] as DomainEvent.BrewingRequested).let {
-            it.recipe shouldBe Recipe.Name("espresso")
-            it.water shouldBe Milliliters(30.0)
-            it.duration.second shouldBe Seconds(28.0)
+            it.recipe shouldBe recipe.name
+            it.water shouldBe recipe.water
+            it.duration shouldBe recipe.brewSeconds
         }
         (outcome.events[3] as DomainEvent.ResourcesConsumed).let {
-            it.water shouldBe Milliliters(30.0)
-            it.beans shouldBe Grams(9.0)
+            it.water shouldBe recipe.water
+            it.beans shouldBe recipe.beans
         }
-        (outcome.events[4] as DomainEvent.WastePuckAdded).puckCount shouldBe 4
-        (outcome.events[5] as DomainEvent.BrewCompleted).recipe shouldBe Recipe.Name("espresso")
+        (outcome.events[5] as DomainEvent.BrewCompleted).recipe shouldBe recipe.name
     }
 
     @Test

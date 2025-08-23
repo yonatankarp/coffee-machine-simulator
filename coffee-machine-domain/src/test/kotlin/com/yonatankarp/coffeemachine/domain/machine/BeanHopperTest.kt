@@ -3,7 +3,9 @@ package com.yonatankarp.coffeemachine.domain.machine
 import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
 import com.yonatankarp.coffeemachine.domain.shared.unit.GramsFixture
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import org.junit.jupiter.api.Test
 
 class BeanHopperTest {
@@ -35,6 +37,7 @@ class BeanHopperTest {
         // Then
         after.current shouldBe GramsFixture.twoHundredEighty
         hopper.current shouldBe GramsFixture.threeHundred
+        after shouldNotBeSameInstanceAs hopper
     }
 
     @Test
@@ -56,14 +59,10 @@ class BeanHopperTest {
         val hopper = BeanHopperFixture.used
         val amount = GramsFixture.fiveHundred
 
-        // When
-        val ex =
-            shouldThrow<IllegalArgumentException> {
-                hopper.consume(amount)
-            }
-
-        // Then
-        ex.message shouldBe "Mass cannot be negative"
+        // When / Then
+        shouldThrowWithMessage<IllegalArgumentException>("Mass cannot be negative") {
+            hopper.consume(amount)
+        }
     }
 
     @Test
