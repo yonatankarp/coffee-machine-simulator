@@ -3,11 +3,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
-    kotlin("jvm") version "2.2.10"
-    kotlin("plugin.spring") version "2.2.10"
-    id("org.springframework.boot") version "3.5.5"
-    id("org.jetbrains.kotlin.plugin.jpa") version "2.2.10"
-    id("io.spring.dependency-management") version "1.1.7"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.kotlin.jpa)
+    alias(libs.plugins.springboot)
+    alias(libs.plugins.spring.dependency.management)
 }
 
 repositories {
@@ -15,29 +15,17 @@ repositories {
 }
 
 dependencies {
+    // Project
     implementation(project(":coffee-machine-domain"))
     implementation(project(":coffee-machine-application"))
 
-    // Spring Boot
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation(libs.bundles.kotlin.all)
+    implementation(libs.bundles.springboot.all)
+    implementation(libs.bundles.persistence.all)
+    implementation(libs.kotlin.logging)
 
-    // Flyway support
-    implementation("org.flywaydb:flyway-core:11.11.1")
-    implementation("com.h2database:h2:2.3.232")
-
-    implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
-
-    // Kotlin
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.2")
-    implementation(kotlin("reflect"))
-
-
-    // H2 in-memory database
-    runtimeOnly("com.h2database:h2")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-
+    testImplementation(libs.bundles.unittest.all)
+    testImplementation(libs.bundles.test.integration.all)
 }
 
 tasks.test {
