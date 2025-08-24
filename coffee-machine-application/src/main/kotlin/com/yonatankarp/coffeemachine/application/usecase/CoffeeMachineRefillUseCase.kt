@@ -3,15 +3,15 @@ package com.yonatankarp.coffeemachine.application.usecase
 import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachineRefillPort
 import com.yonatankarp.coffeemachine.application.usecase.model.MachineStatus
 import com.yonatankarp.coffeemachine.domain.machine.RefillType
-import com.yonatankarp.coffeemachine.domain.machine.port.MachineStateRepository
+import com.yonatankarp.coffeemachine.domain.machine.port.CoffeeMachineRepository
 
-class RefillUseCase(
-    private val stateRepository: MachineStateRepository,
+class CoffeeMachineRefillUseCase(
+    private val coffeeMachineRepository: CoffeeMachineRepository,
 ) : CoffeeMachineRefillPort {
     override fun invoke(type: RefillType): MachineStatus {
-        val machine = stateRepository.load()
+        val machine = coffeeMachineRepository.load()
         val updated = machine.refill(type)
-        stateRepository.save(updated)
+        coffeeMachineRepository.save(updated)
         return MachineStatus.from(updated)
     }
 }

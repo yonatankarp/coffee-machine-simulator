@@ -29,7 +29,7 @@ value class Grams(
         return value / other.value
     }
 
-    override fun toString(): String = value.format("%.1f g")
+    override fun toString(): String = value.format("%.1fg")
 
     companion object {
         val ZERO = Grams(0.0)

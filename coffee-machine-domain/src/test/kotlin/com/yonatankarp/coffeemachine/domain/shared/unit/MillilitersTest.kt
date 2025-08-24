@@ -16,7 +16,7 @@ class MillilitersTest {
         val rendered = ml.toString()
 
         // Then
-        rendered shouldBe "60 ml"
+        rendered shouldBe "60ml"
     }
 
     @Test

@@ -9,6 +9,7 @@ object RecipeFixture {
     val espresso: Recipe
         get() =
             Recipe(
+                id = RecipeId.new(),
                 name = Recipe.Name.ESPRESSO,
                 water = MillilitersFixture.thirty,
                 beans = GramsFixture.nine,
@@ -20,6 +21,7 @@ object RecipeFixture {
     val americano: Recipe
         get() =
             Recipe(
+                id = RecipeId.new(),
                 name = Recipe.Name.AMERICANO,
                 water = MillilitersFixture.oneHundredTwenty,
                 beans = GramsFixture.nine,

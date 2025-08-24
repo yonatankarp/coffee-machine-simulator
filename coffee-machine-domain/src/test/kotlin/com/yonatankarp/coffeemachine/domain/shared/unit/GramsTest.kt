@@ -16,7 +16,7 @@ class GramsTest {
         val rendered = grams.toString()
 
         // Then
-        rendered shouldBe "18.0 g"
+        rendered shouldBe "18.0g"
     }
 
     @Test
