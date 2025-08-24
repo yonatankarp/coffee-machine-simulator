@@ -12,6 +12,8 @@ class FindAllRecipesUseCaseTest {
     @Test
     fun `returns all recipes from repository`() {
         // Given
+        val espresso = espresso
+        val americano = americano
         val recipeRepository = FakeRecipeRepository(espresso, americano)
         val findAllRecipes = FindAllRecipesUseCase(recipeRepository)
 

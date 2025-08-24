@@ -16,7 +16,7 @@ class SecondsTest {
         val rendered = s.toString()
 
         // Then
-        rendered shouldBe "1.3 s"
+        rendered shouldBe "1.3s"
     }
 
     @Test

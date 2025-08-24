@@ -1,6 +1,6 @@
 package com.yonatankarp.coffeemachine.application.usecase
 
-import com.yonatankarp.coffeemachine.application.fakes.FakeMachineRepository
+import com.yonatankarp.coffeemachine.application.fakes.FakeCoffeeMachineRepository
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineFixture.poweredMachine
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -9,8 +9,8 @@ class StatusUseCaseTest {
     @Test
     fun `status reflects repository state`() {
         // Given
-        val machineRepository = FakeMachineRepository(poweredMachine)
-        val machineStatus = StatusUseCase(machineRepository)
+        val machineRepository = FakeCoffeeMachineRepository(poweredMachine)
+        val machineStatus = CoffeeMachineStatusUseCase(machineRepository)
 
         // When
         val status = machineStatus()

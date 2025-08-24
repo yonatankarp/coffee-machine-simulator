@@ -1,6 +1,6 @@
 package com.yonatankarp.coffeemachine.application.usecase
 
-import com.yonatankarp.coffeemachine.application.fakes.FakeMachineRepository
+import com.yonatankarp.coffeemachine.application.fakes.FakeCoffeeMachineRepository
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineFixture
 import com.yonatankarp.coffeemachine.domain.machine.RefillType
 import io.kotest.matchers.shouldBe
@@ -10,8 +10,8 @@ class RefillUseCaseTest {
     @Test
     fun `refill updates reservoirs and returns status DTO`() {
         // Given
-        val machineRepository = FakeMachineRepository(CoffeeMachineFixture.poweredMachine)
-        val refill = RefillUseCase(machineRepository)
+        val machineRepository = FakeCoffeeMachineRepository(CoffeeMachineFixture.poweredMachine)
+        val refill = CoffeeMachineRefillUseCase(machineRepository)
 
         // When
         val afterWater = refill(RefillType.WATER)

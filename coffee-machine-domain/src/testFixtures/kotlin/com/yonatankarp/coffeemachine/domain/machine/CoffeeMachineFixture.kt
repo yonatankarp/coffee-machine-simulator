@@ -14,6 +14,8 @@ object CoffeeMachineFixture {
         wasteBin: WasteBin = WasteBinFixture.used,
         powered: Boolean = true,
     ) = CoffeeMachine(
+        id = CoffeeMachineId.new(),
+        version = 1,
         model = model,
         waterTank = waterTank,
         beanHopper = beanHopper,

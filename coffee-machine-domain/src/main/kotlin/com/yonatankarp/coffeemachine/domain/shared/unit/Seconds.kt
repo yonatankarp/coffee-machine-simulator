@@ -24,7 +24,7 @@ value class Seconds(
         return Seconds(value / k)
     }
 
-    override fun toString(): String = value.format("%.1f s")
+    override fun toString(): String = value.format("%.1fs")
 
     companion object {
         val ZERO = Seconds(0.0)

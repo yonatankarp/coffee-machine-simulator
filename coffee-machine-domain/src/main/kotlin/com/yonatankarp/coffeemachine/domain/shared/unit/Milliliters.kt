@@ -29,7 +29,7 @@ value class Milliliters(
         return value / other.value
     }
 
-    override fun toString(): String = value.format("%.0f ml")
+    override fun toString(): String = value.format("%.0fml")
 
     companion object {
         val ZERO = Milliliters(0.0)

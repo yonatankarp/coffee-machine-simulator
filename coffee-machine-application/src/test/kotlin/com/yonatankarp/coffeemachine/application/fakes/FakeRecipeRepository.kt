@@ -8,7 +8,12 @@ class FakeRecipeRepository(
 ) : RecipeRepository {
     constructor(vararg recipes: Recipe) : this(recipes.toList())
 
-    private val byName = recipes.associateBy { it.name }
+    private val byName = recipes.associateBy { it.name }.toMutableMap()
+
+    override fun save(recipe: Recipe): Recipe {
+        byName[recipe.name] = recipe
+        return recipe
+    }
 
     override fun findByName(name: Recipe.Name): Recipe? = byName[name]
 

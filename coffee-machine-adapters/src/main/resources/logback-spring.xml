@@ -1,0 +1,15 @@
+<configuration>
+    <!-- Apply only when CLI profile is active -->
+    <springProfile name="cli">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <!-- Highlight LEVEL in color, then print message -->
+                <pattern>%highlight(%-5level) %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+</configuration>

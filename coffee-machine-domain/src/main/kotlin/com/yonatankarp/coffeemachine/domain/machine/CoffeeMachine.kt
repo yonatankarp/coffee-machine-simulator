@@ -4,6 +4,8 @@ import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 
 data class CoffeeMachine(
+    val id: CoffeeMachineId,
+    val version: Long,
     val model: Model,
     val waterTank: WaterTank,
     val beanHopper: BeanHopper,

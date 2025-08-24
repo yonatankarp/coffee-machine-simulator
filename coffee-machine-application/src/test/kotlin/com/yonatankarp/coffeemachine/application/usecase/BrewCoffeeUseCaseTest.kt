@@ -1,7 +1,7 @@
 package com.yonatankarp.coffeemachine.application.usecase
 
 import com.yonatankarp.coffeemachine.application.fakes.CollectingPublisher
-import com.yonatankarp.coffeemachine.application.fakes.FakeMachineRepository
+import com.yonatankarp.coffeemachine.application.fakes.FakeCoffeeMachineRepository
 import com.yonatankarp.coffeemachine.application.fakes.FakeRecipeRepository
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineFixture
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineFixture.poweredMachine
@@ -20,7 +20,7 @@ class BrewCoffeeUseCaseTest {
     fun `brewing publishes events and persists updated machine`() {
         // Given
         val machineRepository =
-            FakeMachineRepository(poweredMachine)
+            FakeCoffeeMachineRepository(poweredMachine)
         val recipeRepository = FakeRecipeRepository(espresso)
         val publisher = CollectingPublisher()
         val brewCoffee =
@@ -46,7 +46,7 @@ class BrewCoffeeUseCaseTest {
     fun `brewing when machine is OFF propagates domain error`() {
         // Given
         val machineRepository =
-            FakeMachineRepository(CoffeeMachineFixture.unpoweredMachine)
+            FakeCoffeeMachineRepository(CoffeeMachineFixture.unpoweredMachine)
         val recipeRepository = FakeRecipeRepository(espresso)
         val publisher = CollectingPublisher()
         val brewCoffee =
