@@ -1,9 +1,9 @@
 package com.yonatankarp.coffeemachine.application.usecase
 
 import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachineRefillPort
-import com.yonatankarp.coffeemachine.domain.machine.MachineStatus
 import com.yonatankarp.coffeemachine.domain.machine.RefillType
 import com.yonatankarp.coffeemachine.domain.machine.port.CoffeeMachineRepository
+import com.yonatankarp.coffeemachine.domain.machine.status.MachineStatus
 
 class CoffeeMachineRefillUseCase(
     private val coffeeMachineRepository: CoffeeMachineRepository,

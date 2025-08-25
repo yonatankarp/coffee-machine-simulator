@@ -8,7 +8,7 @@ import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineFixture.powered
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEventFixture
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import com.yonatankarp.coffeemachine.domain.recipe.RecipeFixture.espresso
-import com.yonatankarp.coffeemachine.domain.shared.unit.GramsFixture.twoHundredNinetyOne
+import com.yonatankarp.coffeemachine.domain.shared.unit.GramsFixture.twoHundredEightyTwo
 import com.yonatankarp.coffeemachine.domain.shared.unit.MillilitersFixture.fourHundredSeventy
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
@@ -38,7 +38,7 @@ class BrewCoffeeUseCaseTest {
 
         val after = machineRepository.load()
         after.waterTank.current shouldBe fourHundredSeventy // 500 - 30
-        after.beanHopper.current shouldBe twoHundredNinetyOne // 300 - 9
+        after.beanHopper.current shouldBe twoHundredEightyTwo // 300 - 18
         after.wasteBin.currentPucks shouldBe 4 // 3 + 1
     }
 

@@ -70,7 +70,9 @@ data class CoffeeMachine(
     @JvmInline
     value class Model(
         val value: String,
-    )
+    ) {
+        override fun toString(): String = value
+    }
 
     data class Outcome(
         val updatedMachine: CoffeeMachine,

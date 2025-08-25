@@ -26,6 +26,7 @@ dependencies {
 
     testImplementation(libs.bundles.unittest.all)
     testImplementation(libs.bundles.test.integration.all)
+    testImplementation(testFixtures(project(":coffee-machine-domain")))
 }
 
 tasks.test {
