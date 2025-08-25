@@ -3,11 +3,11 @@ package com.yonatankarp.coffeemachine.adapters.input.cli
 import com.yonatankarp.coffeemachine.adapters.input.cli.Printers.printEvents
 import com.yonatankarp.coffeemachine.adapters.input.cli.Printers.printRecipes
 import com.yonatankarp.coffeemachine.adapters.input.cli.Printers.printStatus
-import com.yonatankarp.coffeemachine.application.ports.input.BrewCoffeePort
-import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachinePowerPort
-import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachineRefillPort
-import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachineStatusPort
-import com.yonatankarp.coffeemachine.application.ports.input.FindAllRecipesPort
+import com.yonatankarp.coffeemachine.application.ports.input.BrewCoffee
+import com.yonatankarp.coffeemachine.application.ports.input.BrowseRecipes
+import com.yonatankarp.coffeemachine.application.ports.input.GetMachineStatus
+import com.yonatankarp.coffeemachine.application.ports.input.ManageMachine
+import com.yonatankarp.coffeemachine.application.ports.input.RefillMachine
 import com.yonatankarp.coffeemachine.domain.machine.RefillType
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -19,11 +19,11 @@ import org.springframework.stereotype.Component
 @Profile("cli")
 @Component
 class CliRunner(
-    private val brew: BrewCoffeePort,
-    private val power: CoffeeMachinePowerPort,
-    private val refill: CoffeeMachineRefillPort,
-    private val status: CoffeeMachineStatusPort,
-    private val listRecipes: FindAllRecipesPort,
+    private val brewCoffee: BrewCoffee,
+    private val manageMachine: ManageMachine,
+    private val refillMachine: RefillMachine,
+    private val getMachineStatus: GetMachineStatus,
+    private val browseRecipes: BrowseRecipes,
 ) : CommandLineRunner {
     private val logger = KotlinLogging.logger {}
 
@@ -44,12 +44,12 @@ class CliRunner(
                 when (cmd) {
                     is Command.Help -> logger.info { Command.help }
                     is Command.Quit -> break@loop
-                    is Command.Power -> power(cmd.on).printStatus()
-                    is Command.Status -> status().printStatus()
-                    is Command.Recipes -> listRecipes().printRecipes()
-                    is Command.RefillWater -> refill(RefillType.WATER).printStatus()
-                    is Command.RefillBeans -> refill(RefillType.BEANS).printStatus()
-                    is Command.EmptyWaste -> refill(RefillType.WASTE).printStatus()
+                    is Command.Power -> manageMachine(cmd.on).printStatus()
+                    is Command.Status -> getMachineStatus().printStatus()
+                    is Command.Recipes -> browseRecipes().printRecipes()
+                    is Command.RefillWater -> refillMachine(RefillType.WATER).printStatus()
+                    is Command.RefillBeans -> refillMachine(RefillType.BEANS).printStatus()
+                    is Command.EmptyWaste -> refillMachine(RefillType.WASTE).printStatus()
                     is Command.Brew -> {
                         val recipeName =
                             runCatching { Recipe.Name.from(cmd.recipeName) }
@@ -57,7 +57,7 @@ class CliRunner(
                                     logger.info { "Unknown recipe '${cmd.recipeName}'. Try 'recipes'." }
                                     null
                                 } ?: continue@loop
-                        brew(recipeName).printEvents()
+                        brewCoffee(recipeName).printEvents()
                     }
                 }
             }.onFailure { logger.error { it.message } }

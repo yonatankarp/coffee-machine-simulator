@@ -1,6 +1,6 @@
 package com.yonatankarp.coffeemachine.adapters
 
-import com.yonatankarp.coffeemachine.application.ports.output.DomainEventPublisher
+import com.yonatankarp.coffeemachine.application.ports.output.EventPublisher
 import com.yonatankarp.coffeemachine.application.usecase.BrewCoffeeUseCase
 import com.yonatankarp.coffeemachine.application.usecase.CoffeeMachinePowerUseCase
 import com.yonatankarp.coffeemachine.application.usecase.CoffeeMachineRefillUseCase
@@ -17,7 +17,7 @@ class AdaptersConfiguration {
     fun brewCoffeeUseCase(
         coffeeMachineRepository: CoffeeMachineRepository,
         recipeRepository: RecipeRepository,
-        publisher: DomainEventPublisher,
+        publisher: EventPublisher,
     ) = BrewCoffeeUseCase(coffeeMachineRepository, recipeRepository, publisher)
 
     @Bean

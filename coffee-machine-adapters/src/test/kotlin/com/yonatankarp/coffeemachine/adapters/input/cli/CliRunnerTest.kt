@@ -1,11 +1,11 @@
 package com.yonatankarp.coffeemachine.adapters.input.cli
 
 import ch.qos.logback.classic.Level
-import com.yonatankarp.coffeemachine.application.ports.input.BrewCoffeePort
-import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachinePowerPort
-import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachineRefillPort
-import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachineStatusPort
-import com.yonatankarp.coffeemachine.application.ports.input.FindAllRecipesPort
+import com.yonatankarp.coffeemachine.application.ports.input.BrewCoffee
+import com.yonatankarp.coffeemachine.application.ports.input.BrowseRecipes
+import com.yonatankarp.coffeemachine.application.ports.input.GetMachineStatus
+import com.yonatankarp.coffeemachine.application.ports.input.ManageMachine
+import com.yonatankarp.coffeemachine.application.ports.input.RefillMachine
 import com.yonatankarp.coffeemachine.domain.machine.RefillType
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
 import com.yonatankarp.coffeemachine.domain.machine.status.MachineStatusFixture
@@ -22,11 +22,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CliRunnerTest {
-    private val brew = mockk<BrewCoffeePort>()
-    private val power = mockk<CoffeeMachinePowerPort>()
-    private val refill = mockk<CoffeeMachineRefillPort>()
-    private val status = mockk<CoffeeMachineStatusPort>()
-    private val listRecipes = mockk<FindAllRecipesPort>()
+    private val brewCoffee = mockk<BrewCoffee>()
+    private val manageMachine = mockk<ManageMachine>()
+    private val refillMachine = mockk<RefillMachine>()
+    private val getMachineStatus = mockk<GetMachineStatus>()
+    private val browseRecipes = mockk<BrowseRecipes>()
 
     @BeforeEach
     fun setup() {
@@ -36,13 +36,13 @@ class CliRunnerTest {
     @Test
     fun `prints banner, help and bye for help then quit`() {
         // Given
-        every { power(any()) } returns MachineStatusFixture.poweredOn
-        every { status.invoke() } returns MachineStatusFixture.poweredOn
-        every { refill(any()) } returns MachineStatusFixture.poweredOn
-        every { listRecipes.invoke() } returns emptyList()
-        every { brew.invoke(any()) } returns emptyList()
+        every { manageMachine(any()) } returns MachineStatusFixture.poweredOn
+        every { getMachineStatus.invoke() } returns MachineStatusFixture.poweredOn
+        every { refillMachine(any()) } returns MachineStatusFixture.poweredOn
+        every { browseRecipes.invoke() } returns emptyList()
+        every { brewCoffee.invoke(any()) } returns emptyList()
 
-        val runner = CliRunner(brew, power, refill, status, listRecipes)
+        val runner = CliRunner(brewCoffee, manageMachine, refillMachine, getMachineStatus, browseRecipes)
 
         WithSystemIn("help", "quit").use {
             LogCapture(CliRunner::class.java, Level.INFO).use { logs ->
@@ -55,7 +55,7 @@ class CliRunnerTest {
                     Command.help,
                     "Bye 👋",
                 )
-                verify(exactly = 0) { brew(any()) }
+                verify(exactly = 0) { brewCoffee(any()) }
             }
         }
     }
@@ -63,13 +63,13 @@ class CliRunnerTest {
     @Test
     fun `unknown command logs hint and continues`() {
         // Given
-        every { power(any()) } returns MachineStatusFixture.poweredOn
-        every { status.invoke() } returns MachineStatusFixture.poweredOn
-        every { refill(any()) } returns MachineStatusFixture.poweredOn
-        every { listRecipes.invoke() } returns emptyList()
-        every { brew.invoke(any()) } returns emptyList()
+        every { manageMachine(any()) } returns MachineStatusFixture.poweredOn
+        every { getMachineStatus.invoke() } returns MachineStatusFixture.poweredOn
+        every { refillMachine(any()) } returns MachineStatusFixture.poweredOn
+        every { browseRecipes.invoke() } returns emptyList()
+        every { brewCoffee.invoke(any()) } returns emptyList()
 
-        val runner = CliRunner(brew, power, refill, status, listRecipes)
+        val runner = CliRunner(brewCoffee, manageMachine, refillMachine, getMachineStatus, browseRecipes)
 
         WithSystemIn("does-not-exist", "quit").use {
             LogCapture(CliRunner::class.java).use { logs ->
@@ -83,7 +83,7 @@ class CliRunnerTest {
                     "Unrecognized command. Type 'help'.",
                     "Bye 👋",
                 )
-                verify(exactly = 0) { brew(any()) }
+                verify(exactly = 0) { brewCoffee(any()) }
             }
         }
     }
@@ -91,15 +91,15 @@ class CliRunnerTest {
     @Test
     fun `power status refill recipes brew espresso invoke corresponding ports`() {
         // Given
-        every { power(true) } returns MachineStatusFixture.poweredOn
-        every { status.invoke() } returns MachineStatusFixture.poweredOn
-        every { refill(RefillType.WATER) } returns MachineStatusFixture.poweredOn
-        every { refill(RefillType.BEANS) } returns MachineStatusFixture.poweredOn
-        every { refill(RefillType.WASTE) } returns MachineStatusFixture.poweredOn
-        every { listRecipes.invoke() } returns emptyList()
-        every { brew(Recipe.Name.ESPRESSO) } returns listOf(DomainEvent.BrewCompleted(Recipe.Name.ESPRESSO))
+        every { manageMachine(true) } returns MachineStatusFixture.poweredOn
+        every { getMachineStatus.invoke() } returns MachineStatusFixture.poweredOn
+        every { refillMachine(RefillType.WATER) } returns MachineStatusFixture.poweredOn
+        every { refillMachine(RefillType.BEANS) } returns MachineStatusFixture.poweredOn
+        every { refillMachine(RefillType.WASTE) } returns MachineStatusFixture.poweredOn
+        every { browseRecipes.invoke() } returns emptyList()
+        every { brewCoffee(Recipe.Name.ESPRESSO) } returns listOf(DomainEvent.BrewCompleted(Recipe.Name.ESPRESSO))
 
-        val runner = CliRunner(brew, power, refill, status, listRecipes)
+        val runner = CliRunner(brewCoffee, manageMachine, refillMachine, getMachineStatus, browseRecipes)
 
         WithSystemIn(
             "power on",
@@ -121,13 +121,13 @@ class CliRunnerTest {
                     "Bye 👋",
                 )
 
-                verify(exactly = 1) { power(true) }
-                verify(exactly = 1) { status.invoke() }
-                verify(exactly = 1) { listRecipes.invoke() }
-                verify(exactly = 1) { refill(RefillType.WATER) }
-                verify(exactly = 1) { refill(RefillType.BEANS) }
-                verify(exactly = 1) { refill(RefillType.WASTE) }
-                verify(exactly = 1) { brew(Recipe.Name.ESPRESSO) }
+                verify(exactly = 1) { manageMachine(true) }
+                verify(exactly = 1) { getMachineStatus.invoke() }
+                verify(exactly = 1) { browseRecipes.invoke() }
+                verify(exactly = 1) { refillMachine(RefillType.WATER) }
+                verify(exactly = 1) { refillMachine(RefillType.BEANS) }
+                verify(exactly = 1) { refillMachine(RefillType.WASTE) }
+                verify(exactly = 1) { brewCoffee(Recipe.Name.ESPRESSO) }
             }
         }
     }
@@ -135,13 +135,13 @@ class CliRunnerTest {
     @Test
     fun `brew unknown recipe prints friendly message and does not call brew`() {
         // Given
-        every { power(any()) } returns MachineStatusFixture.poweredOn
-        every { status.invoke() } returns MachineStatusFixture.poweredOn
-        every { refill(any()) } returns MachineStatusFixture.poweredOn
-        every { listRecipes.invoke() } returns emptyList()
-        every { brew.invoke(any()) } returns emptyList()
+        every { manageMachine(any()) } returns MachineStatusFixture.poweredOn
+        every { getMachineStatus.invoke() } returns MachineStatusFixture.poweredOn
+        every { refillMachine(any()) } returns MachineStatusFixture.poweredOn
+        every { browseRecipes.invoke() } returns emptyList()
+        every { brewCoffee.invoke(any()) } returns emptyList()
 
-        val runner = CliRunner(brew, power, refill, status, listRecipes)
+        val runner = CliRunner(brewCoffee, manageMachine, refillMachine, getMachineStatus, browseRecipes)
 
         WithSystemIn("brew not_a_recipe", "quit").use {
             LogCapture(CliRunner::class.java).use { logs ->
@@ -149,7 +149,7 @@ class CliRunnerTest {
                 runner.run()
 
                 logs.messages shouldContain "Unknown recipe 'NOT_A_RECIPE'. Try 'recipes'."
-                verify(exactly = 0) { brew(any()) }
+                verify(exactly = 0) { brewCoffee(any()) }
             }
         }
     }

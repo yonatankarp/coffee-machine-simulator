@@ -8,11 +8,11 @@ The application layer is composed of a set of use cases, each of which represent
 
 ### Use Cases
 
-*   **`BrewCoffeeUseCase`**: Brews a coffee recipe. It loads the `CoffeeMachine` and `Recipe` aggregates, invokes the `brew` method on the `CoffeeMachine`, and saves the updated machine state.
-*   **`CoffeeMachinePowerUseCase`**: Turns the coffee machine on or off.
-*   **`CoffeeMachineRefillUseCase`**: Refills the water tank, bean hopper, or empties the waste bin.
-*   **`CoffeeMachineStatusUseCase`**: Retrieves the current status of the coffee machine.
-*   **`FindAllRecipesUseCase`**: Retrieves a list of all available coffee recipes.
+*   **`BrewCoffee`**: Brews a coffee recipe. It loads the `CoffeeMachine` and `Recipe` aggregates, invokes the `brew` method on the `CoffeeMachine`, and saves the updated machine state.
+*   **`ManageMachine`**: Turns the coffee machine on or off.
+*   **`RefillMachine`**: Refills the water tank, bean hopper, or empties the waste bin.
+*   **`GetMachineStatus`**: Retrieves the current status of the coffee machine.
+*   **`BrowseRecipes`**: Retrieves a list of all available coffee recipes.
 
 ## Request Lifecycle Sequence Diagram
 
@@ -23,7 +23,7 @@ sequenceDiagram
     autonumber
     participant User
     participant InputAdapter as CLI Adapter
-    participant UseCase as BrewCoffeeUseCase
+    participant UseCase as BrewCoffee
     participant CoffeeMachineRepo as CoffeeMachineRepository
     participant RecipeRepo as RecipeRepository
     participant Domain as CoffeeMachine Aggregate
@@ -44,3 +44,4 @@ sequenceDiagram
     UseCase->>CoffeeMachineRepo: save(updatedMachine)
     CoffeeMachineRepo->>DB: UPDATE coffee_machine
     InputAdapter-->>User: "Brewing ESPRESSO... ☕"
+```
