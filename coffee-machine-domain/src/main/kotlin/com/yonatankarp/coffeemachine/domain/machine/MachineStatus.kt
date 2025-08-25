@@ -1,6 +1,4 @@
-package com.yonatankarp.coffeemachine.application.usecase.model
-
-import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachine
+package com.yonatankarp.coffeemachine.domain.machine
 
 data class MachineStatus(
     val model: CoffeeMachine.Model,

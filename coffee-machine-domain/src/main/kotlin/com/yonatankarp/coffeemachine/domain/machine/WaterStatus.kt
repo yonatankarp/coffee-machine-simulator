@@ -1,4 +1,4 @@
-package com.yonatankarp.coffeemachine.application.usecase.model
+package com.yonatankarp.coffeemachine.domain.machine
 
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
 
