@@ -1,12 +1,12 @@
 package com.yonatankarp.coffeemachine.adapters.output.cli
 
-import com.yonatankarp.coffeemachine.application.ports.output.DomainEventPublisher
+import com.yonatankarp.coffeemachine.application.ports.output.EventPublisher
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component
 
 @Component
-class ConsoleDomainEventPublisher : DomainEventPublisher {
+class ConsoleDomainEventPublisher : EventPublisher {
     private val logger = KotlinLogging.logger {}
 
     override fun publish(event: DomainEvent) {

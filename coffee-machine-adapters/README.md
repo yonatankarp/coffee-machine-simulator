@@ -17,7 +17,7 @@ The adapters are divided into two main categories: input and output.
 
 *   **`CoffeeMachineH2Repository`**: This is an implementation of the `CoffeeMachineRepository` port that uses an in-memory H2 database to persist the state of the `CoffeeMachine` aggregate.
 *   **`RecipeH2Repository`**: This is an implementation of the `RecipeRepository` port that uses an in-memory H2 database to persist the `Recipe` aggregate.
-*   **`ConsoleDomainEventPublisher`**: This is an implementation of the `DomainEventPublisher` port that simply prints the domain events to the console.
+*   **`ConsoleDomainEventPublisher`**: This is an implementation of the `EventPublisher` port that simply prints the domain events to the console.
 
 ## Technology Stack
 
