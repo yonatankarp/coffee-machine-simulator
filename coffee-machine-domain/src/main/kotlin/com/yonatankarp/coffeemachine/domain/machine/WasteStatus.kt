@@ -1,4 +1,4 @@
-package com.yonatankarp.coffeemachine.application.usecase.model
+package com.yonatankarp.coffeemachine.domain.machine
 
 data class WasteStatus(
     val currentPucks: Int,
