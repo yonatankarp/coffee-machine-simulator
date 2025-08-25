@@ -1,0 +1,60 @@
+Machine: KarpCafé Deluxe
+  Power: OFF
+  Water: 2000ml/2000ml (100%)
+  Beans: 500.0g/500.0g (100%)
+  Waste: 0/12 pucks
+Recipes:
+  - Espresso | water=30ml beans=18.0g temp=93.0°C grind=FINE brew=25.0s
+  - Ristretto | water=22ml beans=16.0g temp=94.0°C grind=FINE brew=20.0s
+  - Lungo | water=60ml beans=18.0g temp=92.0°C grind=MEDIUM brew=35.0s
+  - Americano | water=120ml beans=18.0g temp=93.0°C grind=MEDIUM brew=25.0s
+  - Long Black | water=100ml beans=18.0g temp=93.0°C grind=MEDIUM brew=25.0s
+  - Latte | water=35ml beans=18.0g temp=93.0°C grind=MEDIUM brew=30.0s
+  - Cappuccino | water=30ml beans=18.0g temp=93.0°C grind=FINE brew=25.0s
+  - Flat White | water=30ml beans=18.0g temp=92.0°C grind=FINE brew=25.0s
+  - Double Espresso | water=60ml beans=36.0g temp=94.0°C grind=FINE brew=35.0s
+  - Cortado | water=25ml beans=16.0g temp=92.0°C grind=FINE brew=20.0s
+Machine: KarpCafé Deluxe
+  Power: ON
+  Water: 2000ml/2000ml (100%)
+  Beans: 500.0g/500.0g (100%)
+  Waste: 0/12 pucks
+[event] Heating water to 93.0°C
+[event] Grinding 18.0g of beans
+[event] Brewing Espresso with 30ml of water for 25.0s
+[event] Consumed 30ml of water and 18.0g of beans
+[event] Waste bin now contains 1 pucks
+[event] Brew of Espresso completed
+Events:
+  - Heating water to 93.0°C
+  - Grinding 18.0g of beans
+  - Brewing Espresso with 30ml of water for 25.0s
+  - Consumed 30ml of water and 18.0g of beans
+  - Waste bin now contains 1 pucks
+  - Brew of Espresso completed
+Machine: KarpCafé Deluxe
+  Power: ON
+  Water: 1970ml/2000ml (98%)
+  Beans: 482.0g/500.0g (96%)
+  Waste: 1/12 pucks
+Machine: KarpCafé Deluxe
+  Power: ON
+  Water: 2000ml/2000ml (100%)
+  Beans: 482.0g/500.0g (96%)
+  Waste: 1/12 pucks
+Machine: KarpCafé Deluxe
+  Power: ON
+  Water: 2000ml/2000ml (100%)
+  Beans: 482.0g/500.0g (96%)
+  Waste: 0/12 pucks
+Machine: KarpCafé Deluxe
+  Power: ON
+  Water: 2000ml/2000ml (100%)
+  Beans: 500.0g/500.0g (100%)
+  Waste: 0/12 pucks
+Machine: KarpCafé Deluxe
+  Power: OFF
+  Water: 2000ml/2000ml (100%)
+  Beans: 500.0g/500.0g (100%)
+  Waste: 0/12 pucks
+Bye 👋

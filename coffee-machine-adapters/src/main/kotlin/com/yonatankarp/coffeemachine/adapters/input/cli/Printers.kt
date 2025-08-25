@@ -1,7 +1,7 @@
 package com.yonatankarp.coffeemachine.adapters.input.cli
 
-import com.yonatankarp.coffeemachine.application.usecase.model.MachineStatus
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
+import com.yonatankarp.coffeemachine.domain.machine.status.MachineStatus
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import io.github.oshai.kotlinlogging.KotlinLogging
 
@@ -9,15 +9,11 @@ object Printers {
     private val logger = KotlinLogging.logger {}
 
     fun MachineStatus.printStatus() {
-        logger.info {
-            """
-            Machine: $model
-              Power: ${if (poweredOn) "ON" else "OFF"}
-              Water: ${water.current}/${water.capacity} (${water.remainingRatio()}%)
-              Beans: ${beans.current}/${beans.capacity} (${beans.remainingRatio()}%)
-              Waste: ${waste.currentPucks}/${waste.capacityPucks} pucks
-            """.trimIndent()
-        }
+        logger.info { "Machine: $model" }
+        logger.info { "  Power: ${if (poweredOn) "ON" else "OFF"}" }
+        logger.info { "  Water: ${water.current}/${water.capacity} (${water.remainingRatio()}%)" }
+        logger.info { "  Beans: ${beans.current}/${beans.capacity} (${beans.remainingRatio()}%)" }
+        logger.info { "  Waste: ${waste.currentPucks}/${waste.capacityPucks} pucks" }
     }
 
     fun List<Recipe>.printRecipes() {

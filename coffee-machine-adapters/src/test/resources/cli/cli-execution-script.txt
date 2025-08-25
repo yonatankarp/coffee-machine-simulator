@@ -1,0 +1,10 @@
+status
+recipes
+power on
+brew espresso
+status
+refill water
+refill waste
+refill beans
+power off
+quit

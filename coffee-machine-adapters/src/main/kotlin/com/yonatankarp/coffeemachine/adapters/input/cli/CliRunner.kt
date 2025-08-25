@@ -11,6 +11,7 @@ import com.yonatankarp.coffeemachine.application.ports.input.FindAllRecipesPort
 import com.yonatankarp.coffeemachine.domain.machine.RefillType
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.transaction.Transactional
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -26,6 +27,7 @@ class CliRunner(
 ) : CommandLineRunner {
     private val logger = KotlinLogging.logger {}
 
+    @Transactional
     override fun run(vararg args: String?) {
         logger.info { "Coffee Machine CLI ☕️" }
         logger.info { Command.help }
@@ -33,11 +35,11 @@ class CliRunner(
         loop@ while (true) {
             runCatching {
                 logger.info { "> " }
-                val line = readlnOrNull() ?: break
+                val line = readlnOrNull() ?: break@loop
                 val cmd = Command.parse(line)
                 if (cmd == null) {
                     logger.info { "Unrecognized command. Type 'help'." }
-                    continue
+                    continue@loop
                 }
                 when (cmd) {
                     is Command.Help -> logger.info { Command.help }
@@ -54,7 +56,7 @@ class CliRunner(
                                 .getOrElse {
                                     logger.info { "Unknown recipe '${cmd.recipeName}'. Try 'recipes'." }
                                     null
-                                } ?: continue
+                                } ?: continue@loop
                         brew(recipeName).printEvents()
                     }
                 }

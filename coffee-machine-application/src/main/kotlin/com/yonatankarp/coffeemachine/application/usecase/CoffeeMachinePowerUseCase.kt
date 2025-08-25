@@ -1,8 +1,8 @@
 package com.yonatankarp.coffeemachine.application.usecase
 
 import com.yonatankarp.coffeemachine.application.ports.input.CoffeeMachinePowerPort
-import com.yonatankarp.coffeemachine.domain.machine.MachineStatus
 import com.yonatankarp.coffeemachine.domain.machine.port.CoffeeMachineRepository
+import com.yonatankarp.coffeemachine.domain.machine.status.MachineStatus
 
 class CoffeeMachinePowerUseCase(
     private val coffeeMachineRepository: CoffeeMachineRepository,

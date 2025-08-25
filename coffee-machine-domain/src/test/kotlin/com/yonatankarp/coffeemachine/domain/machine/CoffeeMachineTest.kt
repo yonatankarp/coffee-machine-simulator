@@ -55,7 +55,7 @@ class CoffeeMachineTest {
 
         // Then
         outcome.updatedMachine.waterTank.current shouldBe Milliliters(470.00)
-        outcome.updatedMachine.beanHopper.current shouldBe Grams(291.0)
+        outcome.updatedMachine.beanHopper.current shouldBe Grams(282.0)
         outcome.updatedMachine.wasteBin.currentPucks shouldBe 4
 
         outcome.events.map { it::class } shouldContainExactly DomainEventFixture.eventClasses

@@ -1,4 +1,4 @@
-package com.yonatankarp.coffeemachine.domain.machine
+package com.yonatankarp.coffeemachine.domain.machine.status
 
 object WasteStatusFixture {
     val empty: WasteStatus
