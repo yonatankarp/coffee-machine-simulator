@@ -1,0 +1,675 @@
+/* ===== Base tokens ===== */
+* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+:root {
+    --bg: #0f0f12;
+    --panel: #15161a;
+    --card: #191a20;
+    --border: #2a2b31;
+    --text: #eaeaea;
+    --muted: #9aa0a6;
+    --muted-2: #c9ccd1;
+    --accent: #8ab4f8;
+    --ok: #4ade80;
+    --warn: #ef4444;
+
+    /* Layout sizing */
+    --header-h: 56px;
+    --footer-h: 44px;
+
+    /* CSS machine vars (default to full tanks so it looks filled before first poll) */
+    --cm-width: 420px;
+    --cm-height: 320px;
+    --brew-ratio: 0;
+    --water-pct: 1; /* starts fully blue */
+    --beans-pct: 1;
+    --cup-offset: 0px;
+    --drip-distance: 200px; /* will be computed to cup bottom + 10px */
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ===== Global chrome ===== */
+.site-header, .site-footer {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+}
+
+.site-header {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+}
+
+.site-footer {
+    height: var(--footer-h);
+    border-top: 1px solid var(--border);
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Two-pane app layout ===== */
+.layout {
+    height: calc(100vh - var(--header-h) - var(--footer-h));
+    display: grid;
+    grid-template-columns: minmax(520px, 1fr) 420px;
+    gap: 16px;
+    padding: 16px;
+    overflow: hidden;
+}
+
+.left-pane, .right-pane {
+    min-height: 0;
+    display: grid;
+    grid-auto-rows: max-content;
+    gap: 16px;
+}
+
+.left-pane {
+    overflow: auto;
+}
+
+.right-pane {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px;
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    overflow: hidden;
+}
+
+.recipes-header {
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    padding: 4px 4px 8px 4px;
+    z-index: 1;
+}
+
+.scroll-area {
+    overflow: auto;
+    min-height: 0;
+}
+
+/* ===== Dashboard gauges + ring ===== */
+.machine-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    align-items: center;
+}
+
+.gauge label {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.bar {
+    width: 100%;
+    height: 14px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: var(--ok);
+    width: 0;
+    transition: width .5s ease;
+}
+
+.fill.red {
+    background: var(--warn);
+}
+
+.num {
+    margin-top: 6px;
+    color: var(--muted-2);
+    font-size: 12px;
+}
+
+.brew-visual {
+    display: flex;
+    justify-content: center;
+}
+
+.ring {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: conic-gradient(#334155 0deg, #334155 360deg);
+    display: grid;
+    place-items: center;
+}
+
+.ring .center {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 8px;
+}
+
+#brewLabel {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+#brewTimer {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* ===== Recipes panel ===== */
+.recipes-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.kv {
+    display: grid;
+    grid-template-columns:auto 1fr;
+    gap: 4px 8px;
+    font-size: 12px;
+    color: var(--muted-2);
+}
+
+.kv span {
+    color: var(--muted);
+}
+
+button {
+    appearance: none;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button.outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--border);
+}
+
+button:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+/* ===== Collapsible controls ===== */
+.controls {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.controls-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 16px;
+    background: transparent;
+    color: var(--text);
+    border: none;
+    border-radius: 16px 16px 0 0;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.controls .chevron {
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid var(--muted-2);
+    border-bottom: 2px solid var(--muted-2);
+    transform: rotate(45deg);
+    transition: transform .2s ease;
+}
+
+.controls[aria-expanded="false"] .chevron {
+    transform: rotate(-135deg);
+}
+
+.controls-body {
+    padding: 0 16px 16px 16px;
+    display: block;
+}
+
+.controls[aria-expanded="false"] .controls-body {
+    display: none;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+}
+
+/* ===== CSS Coffee Machine ===== */
+.css-machine-wrapper {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+}
+
+.css-caption {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.coffee-machine {
+    position: relative;
+    width: var(--cm-width);
+    height: var(--cm-height);
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, .4));
+}
+
+.coffee-machine.is-off {
+    filter: grayscale(.9) brightness(.7);
+}
+
+.cm-shadow {
+    position: absolute;
+    left: 10%;
+    bottom: -8px;
+    width: 80%;
+    height: 16px;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, .45), rgba(0, 0, 0, 0));
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cm-body {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 80% at 50% -20%, rgba(255, 255, 255, .06), transparent 60%),
+    linear-gradient(180deg, #22262d 0%, #1b1f26 60%, #171a20 100%);
+    border: 1px solid #28303a;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.cm-top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 34px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, 0) 60%), linear-gradient(180deg, #2a2f37, #1f232b);
+}
+
+/* Side tanks / hopper */
+.cm-side {
+    position: absolute;
+    top: 46px;
+    width: 88px;
+    height: calc(100% - 110px);
+}
+
+.cm-left {
+    left: 10px;
+}
+
+.cm-right {
+    right: 10px;
+}
+
+.cm-tank, .cm-hopper {
+    position: absolute;
+    inset: 0;
+    border: 1px solid #2b3441;
+    border-radius: 12px;
+    background: #0b0f14;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+
+.cm-tank.water::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(138, 180, 248, .10), rgba(138, 180, 248, 0) 40%),
+    linear-gradient(180deg, #0e1520, #0a0f17);
+    pointer-events: none;
+}
+
+/* WATER: starts fully blue (height 100%) and goes down as consumed */
+.cm-tank-fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--water-pct) * 100%);
+    background: linear-gradient(180deg, #61a5ff, #2763b9);
+    border-top: 1px solid rgba(255, 255, 255, .25);
+    transition: height .5s linear;
+}
+
+.cm-hopper.beans::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 40% at 50% 0%, rgba(255, 255, 255, .06), transparent 50%),
+    linear-gradient(180deg, #14161c, #0c0f14);
+    pointer-events: none;
+}
+
+.cm-hopper-fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--beans-pct) * 100%);
+    background: radial-gradient(180% 50% at 50% 0%, rgba(255, 255, 255, .08), rgba(255, 255, 255, 0) 35%), repeating-radial-gradient(circle at 50% 100%, #6a3a12 0 3px, #3e220b 3px 6px);
+    border-top: 1px solid rgba(255, 255, 255, .2);
+    transition: height .5s linear;
+}
+
+/* Control panel */
+.cm-panel {
+    position: absolute;
+    left: 108px;
+    right: 108px;
+    top: 16px;
+    height: 70px;
+    background: linear-gradient(180deg, #111318, #0b0d12);
+    border: 1px solid #2a2f37;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+}
+
+.cm-display {
+    height: 44px;
+    border-radius: 8px;
+    border: 1px solid #27303a;
+    background: radial-gradient(120% 140% at 0% 0%, rgba(138, 180, 248, .25), rgba(138, 180, 248, .05));
+    display: grid;
+    place-items: center;
+    color: #dfe9ff;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-shadow: 0 0 10px rgba(138, 180, 248, .35);
+    overflow: hidden;
+}
+
+.cm-display span {
+    padding: 0 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+}
+
+.cm-leds {
+    display: flex;
+    gap: 8px;
+}
+
+.cm-led {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #9ee6a8, #3abf5a);
+    box-shadow: 0 0 8px rgba(74, 222, 128, .7);
+    opacity: .2;
+}
+
+.coffee-machine.is-brewing .cm-led {
+    animation: ledPulse 1.2s ease-in-out infinite;
+    opacity: .9;
+}
+
+.coffee-machine.is-on:not(.is-brewing) .cm-led {
+    opacity: .6;
+}
+
+@keyframes ledPulse {
+    0%, 100% {
+        opacity: .4
+    }
+    50% {
+        opacity: 1
+    }
+}
+
+/* Group head + drip */
+.cm-group {
+    position: absolute;
+    left: 108px;
+    right: 108px;
+    top: 104px;
+    height: 86px;
+}
+
+.cm-head {
+    position: absolute;
+    left: 70px;
+    right: 70px;
+    top: 0;
+    height: 24px;
+    background: linear-gradient(180deg, #2f3742, #252c36);
+    border: 1px solid #3a4453;
+    border-radius: 8px;
+}
+
+.cm-portafilter {
+    position: absolute;
+    left: calc(50% - 60px);
+    top: 24px;
+    width: 120px;
+    height: 20px;
+    background: linear-gradient(180deg, #3b4554, #2a3140);
+    border: 1px solid #434f63;
+    border-radius: 10px;
+    box-shadow: inset 0 -4px 6px rgba(0, 0, 0, .25);
+}
+
+.cm-spout {
+    position: absolute;
+    left: calc(50% - 6px);
+    top: 44px;
+    width: 12px;
+    height: 18px;
+    background: linear-gradient(180deg, #556173, #2b3240);
+    border: 1px solid #465266;
+    border-bottom: none;
+    border-radius: 0 0 10px 10px;
+}
+
+.cm-drip {
+    position: absolute;
+    left: calc(50% - 3px);
+    top: 62px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7c4a21;
+    opacity: 0;
+    transform: translateY(0);
+}
+
+.coffee-machine.is-brewing .cm-drip {
+    animation: drip .9s linear infinite;
+    opacity: 1;
+}
+
+/* Drip distance is computed in JS -> CSS var --drip-distance. Limit: cup bottom + 10px */
+@keyframes drip {
+    0% {
+        transform: translateY(0);
+        opacity: .95;
+    }
+    70% {
+        transform: translateY(calc(var(--drip-distance) * .7));
+        opacity: .95;
+    }
+    100% {
+        transform: translateY(var(--drip-distance));
+        opacity: 0;
+    }
+}
+
+.cm-tray {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 56px;
+    height: 14px;
+    background: linear-gradient(180deg, #0c0f14, #0a0d12), repeating-linear-gradient(90deg, #27303a 0 10px, #202833 10px 20px);
+    border: 1px solid #2b3441;
+    border-radius: 8px;
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, .5);
+}
+
+.cm-cup {
+    position: absolute;
+    left: calc(50% - 34px);
+    bottom: 66px;
+    width: 68px;
+    height: 60px;
+    background: linear-gradient(180deg, #fafafa, #e9e9e9);
+    border: 2px solid #d7d7d7;
+    border-bottom-width: 6px;
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+    transform: translateX(var(--cup-offset));
+}
+
+.cm-cup-handle {
+    position: absolute;
+    right: -16px;
+    top: 18px;
+    width: 28px;
+    height: 24px;
+    border: 6px solid #e9e9e9;
+    border-left: 6px solid transparent;
+    border-radius: 18px;
+    box-shadow: inset 0 0 0 2px #d7d7d7;
+}
+
+.cm-liquid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--brew-ratio) * 58%);
+    background: radial-gradient(120% 120% at 50% 0%, rgba(255, 255, 255, .15), rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, #6a3a12, #3e220b 70%, #2b1606);
+    transition: height 1s linear;
+    border-top: 2px solid rgba(255, 255, 255, .25);
+}
+
+.cm-steam {
+    --sx: 0;
+    position: absolute;
+    left: calc(50% - 8px);
+    bottom: 64px;
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .35), transparent 60%);
+    filter: blur(4px);
+    opacity: 0;
+    transform: translateY(0) translateX(var(--sx));
+    pointer-events: none;
+}
+
+.coffee-machine.is-brewing .cm-steam {
+    animation: steam 2.2s ease-in-out infinite;
+    opacity: .9;
+}
+
+.cm-steam.s1 {
+    --sx: -10px;
+    animation-delay: .2s;
+}
+
+.cm-steam.s2 {
+    --sx: 10px;
+    animation-delay: .9s;
+}
+
+@keyframes steam {
+    0% {
+        transform: translateY(0) translateX(var(--sx));
+        opacity: .15;
+    }
+    40% {
+        transform: translateY(-22px) translateX(calc(var(--sx) * .7));
+        opacity: .9;
+    }
+    80% {
+        transform: translateY(-44px) translateX(calc(var(--sx) * .3));
+        opacity: .2;
+    }
+    100% {
+        transform: translateY(-52px) translateX(0);
+        opacity: 0;
+    }
+}
+
+/* ===== Responsive: stack panes under ~980px ===== */
+@media (max-width: 980px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .right-pane {
+        min-height: 320px;
+    }
+}

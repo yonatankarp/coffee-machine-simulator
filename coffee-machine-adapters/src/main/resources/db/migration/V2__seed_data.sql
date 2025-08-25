@@ -45,7 +45,8 @@ merge into coffee_machine (id, version, model,
     water_capacity, water_current,
     beans_capacity, beans_current,
     waste_capacity_pucks, waste_current_pucks,
-    powered_on)
+    powered_on,
+    is_brewing)
     key(id)
     values (
     uuid '00000000-0000-0000-0000-000000000000',
@@ -54,5 +55,6 @@ merge into coffee_machine (id, version, model,
     2000.0, 2000.0,
     500.0,  500.0,
     12,     0,
+    false,
     false
     );

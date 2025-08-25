@@ -8,7 +8,7 @@ import jakarta.persistence.Version
 import java.util.UUID
 
 @Entity
-@Table(name = "coffee_machine")
+@Table(name = "coffee_machine_status")
 data class CoffeeMachineEntity(
     @Id
     @Column(name = "id", nullable = false)

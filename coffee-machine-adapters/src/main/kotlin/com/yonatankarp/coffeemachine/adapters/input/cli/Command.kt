@@ -17,13 +17,9 @@ sealed interface Command {
         val recipeName: String,
     ) : Command
 
-    data class RefillWater(
-        val ml: Double?,
-    ) : Command
+    data object RefillWater : Command
 
-    data class RefillBeans(
-        val g: Double?,
-    ) : Command
+    data object RefillBeans : Command
 
     data object EmptyWaste : Command
 
@@ -75,8 +71,8 @@ sealed interface Command {
 
         private fun List<String>.praseRefill(): Command? =
             when (getOrNull(1)?.lowercase()) {
-                "water" -> RefillWater(getOrNull(2)?.toDoubleOrNull())
-                "beans" -> RefillBeans(getOrNull(2)?.toDoubleOrNull())
+                "water" -> RefillWater
+                "beans" -> RefillBeans
                 "waste" -> EmptyWaste
                 else -> null
             }

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Coffee Machine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<header class="site-header">
+    <h1>☕ Coffee Machine Control Panel</h1>
+</header>
+
+<main class="layout">
+    <!-- ===== LEFT PANE: dashboard + machine + controls ===== -->
+    <section class="left-pane">
+
+        <!-- 1) Numeric dashboard -->
+        <div class="machine-body">
+            <div class="gauge">
+                <label>Water</label>
+                <div class="bar">
+                    <div id="waterBar" class="fill"></div>
+                </div>
+                <div class="num"><span id="waterNum">0/0</span> ml</div>
+            </div>
+            <div class="gauge">
+                <label>Beans</label>
+                <div class="bar">
+                    <div id="beansBar" class="fill"></div>
+                </div>
+                <div class="num"><span id="beansNum">0/0</span> g</div>
+            </div>
+            <div class="gauge">
+                <label>Waste</label>
+                <div class="bar">
+                    <div id="wasteBar" class="fill red"></div>
+                </div>
+                <div class="num"><span id="wasteNum">0/0</span> pucks</div>
+            </div>
+
+            <!-- Progress ring -->
+            <div class="brew-visual">
+                <div class="ring" id="brewRing">
+                    <div class="center">
+                        <div id="brewLabel">OFF</div>
+                        <div id="brewTimer">--s</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2) CSS coffee machine (waste visual removed) -->
+        <div class="css-machine-wrapper">
+            <div class="coffee-machine is-off" id="cssMachine" aria-label="Coffee machine">
+                <div class="cm-shadow"></div>
+                <div class="cm-body">
+                    <div class="cm-top"></div>
+
+                    <!-- Side tanks -->
+                    <div class="cm-side cm-left">
+                        <div class="cm-tank water">
+                            <div class="cm-tank-label">Water</div>
+                            <div class="cm-tank-fill" id="waterTank"></div>
+                        </div>
+                    </div>
+                    <div class="cm-side cm-right">
+                        <div class="cm-hopper beans">
+                            <div class="cm-tank-label">Beans</div>
+                            <div class="cm-hopper-fill" id="beansHopper"></div>
+                        </div>
+                    </div>
+
+                    <div class="cm-panel">
+                        <div class="cm-display">
+                            <span id="cmDisplayText">OFF</span>
+                        </div>
+                        <div class="cm-leds">
+                            <span class="cm-led"></span>
+                            <span class="cm-led"></span>
+                            <span class="cm-led"></span>
+                        </div>
+                    </div>
+
+                    <div class="cm-group">
+                        <div class="cm-head"></div>
+                        <div class="cm-portafilter"></div>
+                        <div class="cm-spout" id="spout"></div>
+                        <div class="cm-drip" id="drip"></div>
+                    </div>
+
+                    <div class="cm-tray"></div>
+
+                    <!-- Cup (centered; JS can fine-tune alignment to spout) -->
+                    <div class="cm-cup" id="cup">
+                        <div class="cm-cup-handle"></div>
+                        <div class="cm-liquid"></div>
+                        <div class="cm-steam s1"></div>
+                        <div class="cm-steam s2"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="css-caption">Live brew + tanks: water/beans go down</div>
+        </div>
+
+        <!-- 3) Collapsible Controls -->
+        <section class="controls" id="controls" aria-expanded="true">
+            <button id="controlsToggle" class="controls-toggle" aria-expanded="true" aria-controls="controlsBody">
+                Controls
+                <span class="chevron" aria-hidden="true"></span>
+            </button>
+            <div class="controls-body" id="controlsBody">
+                <div class="controls-grid">
+                    <button id="powerToggleBtn" title="Toggle power">Power On</button>
+                    <button id="fillWaterBtn" title="Refill water tank to full capacity">Fill Water</button>
+                    <button id="addBeansBtn" title="Refill bean hopper to full capacity">Fill Beans</button>
+                    <button id="emptyWasteBtn" title="Empty waste bin">Empty Waste</button>
+                    <button id="cancelBtn" class="outline" title="Cancel current brew">Cancel Brew</button>
+                </div>
+            </div>
+        </section>
+
+    </section>
+
+    <!-- ===== RIGHT PANE: scrollable recipes list ===== -->
+    <aside class="right-pane">
+        <div class="recipes-header">
+            <h2>Recipes</h2>
+        </div>
+        <div id="recipes" class="recipes-grid scroll-area">
+            <!-- cards injected by app.js -->
+        </div>
+    </aside>
+</main>
+
+<footer class="site-footer">
+    <small>Right pane scrolls independently. Choose a recipe and brew!</small>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+openapi: 3.0.3
+info:
+  title: Coffee Machine API
+  version: 1.0.0
+  description: >
+    REST API for brewing coffee, controlling power, refilling resources and querying
+    status/recipes. This spec mirrors the current Spring MVC controllers.
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Brew
+  - name: Power
+  - name: Maintenance
+  - name: Recipes
+  - name: Status
+
+paths:
+  /api/brew:
+    post:
+      tags: [Brew]
+      operationId: startBrew
+      summary: Start a brew job
+      description: |
+        Accepts a brew request for a specific recipe. Returns 202 even when the brew
+        is rejected (payload indicates success).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartBrewRequest'
+            examples:
+              espresso:
+                value: { recipeId: "11111111-2222-3333-4444-555555555555" }
+      responses:
+        '202':
+          description: Brew request accepted by the controller
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartBrewResponse'
+              examples:
+                accepted:
+                  value: { started: true, message: "Brewing Espresso for 20s" }
+                busy:
+                  value: { started: false, message: "Machine is already brewing" }
+
+  /api/brew/cancel:
+    post:
+      tags: [Brew]
+      operationId: cancelBrew
+      summary: Cancel current brew
+      responses:
+        '200':
+          description: Cancellation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartBrewResponse'
+              examples:
+                cancelled:
+                  value: { started: true, message: "Brew cancelled" }
+                none:
+                  value: { started: false, message: "No brew in progress" }
+
+  /api/power/{powerStatus}:
+    post:
+      tags: [Power]
+      operationId: switchPower
+      summary: Power the machine on or off
+      parameters:
+        - name: powerStatus
+          in: path
+          required: true
+          description: Case-insensitive power state to apply.
+          schema:
+            type: string
+            enum: [on, off]
+      responses:
+        '202':
+          description: Updated machine status after switching power
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineStatus'
+              examples:
+                on:
+                  value:
+                    model: "Model X"
+                    poweredOn: true
+                    waterCurrent: 900
+                    waterCapacity: 1000
+                    beansCurrent: 180
+                    beansCapacity: 200
+                    wasteCurrentPucks: 0
+                    wasteCapacityPucks: 12
+                    brewing: false
+                    brewRecipeId: null
+                    brewRecipeName: null
+                    brewElapsedSeconds: 0
+                    brewTotalSeconds: 0
+
+  /api/maintenance/refill:
+    post:
+      tags: [Maintenance]
+      operationId: refill
+      summary: Refill a resource to capacity (or empty waste bin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefillRequest'
+            examples:
+              fillWater: { value: { type: "WATER" } }
+              fillBeans: { value: { type: "BEANS" } }
+              emptyWaste: { value: { type: "WASTE" } }
+      responses:
+        '202':
+          description: Refill accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefillResponse'
+              examples:
+                ok:
+                  value: { ok: true, message: "WATER filled to capacity" }
+
+  /api/recipes:
+    get:
+      tags: [Recipes]
+      operationId: listRecipes
+      summary: List available recipes
+      responses:
+        '200':
+          description: Array of available recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+              examples:
+                sample:
+                  value:
+                    - id: "11111111-2222-3333-4444-555555555555"
+                      name: "Espresso"
+                      water: 30
+                      beans: 8
+                      temperature: 93
+                      grind: "FINE"
+                      brewSeconds: 20
+                    - id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+                      name: "Americano"
+                      water: 120
+                      beans: 8
+                      temperature: 93
+                      grind: "FINE"
+                      brewSeconds: 25
+
+  /api/status:
+    get:
+      tags: [Status]
+      operationId: getStatus
+      summary: Current machine status (with brew overlay)
+      responses:
+        '200':
+          description: Current status of the machine
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineStatus'
+              examples:
+                idle:
+                  value:
+                    model: "Model X"
+                    poweredOn: true
+                    waterCurrent: 850
+                    waterCapacity: 1000
+                    beansCurrent: 170
+                    beansCapacity: 200
+                    wasteCurrentPucks: 2
+                    wasteCapacityPucks: 12
+                    brewing: false
+                    brewRecipeId: null
+                    brewRecipeName: null
+                    brewElapsedSeconds: 0
+                    brewTotalSeconds: 0
+                brewing:
+                  value:
+                    model: "Model X"
+                    poweredOn: true
+                    waterCurrent: 820
+                    waterCapacity: 1000
+                    beansCurrent: 160
+                    beansCapacity: 200
+                    wasteCurrentPucks: 2
+                    wasteCapacityPucks: 12
+                    brewing: true
+                    brewRecipeId: "11111111-2222-3333-4444-555555555555"
+                    brewRecipeName: "Espresso"
+                    brewElapsedSeconds: 7
+                    brewTotalSeconds: 20
+
+components:
+  schemas:
+
+    StartBrewRequest:
+      type: object
+      required: [recipeId]
+      properties:
+        recipeId:
+          type: string
+          format: uuid
+          description: ID of the recipe to brew.
+
+    StartBrewResponse:
+      type: object
+      required: [started, message]
+      properties:
+        started:
+          type: boolean
+          description: Whether the brew was accepted and started.
+        message:
+          type: string
+          description: Human-readable message.
+
+    Recipe:
+      type: object
+      required: [id, name, water, beans, temperature, grind, brewSeconds]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Recipe ID.
+        name:
+          type: string
+        water:
+          type: integer
+          format: int32
+          description: Water in milliliters.
+          example: 30
+        beans:
+          type: integer
+          format: int32
+          description: Coffee beans in grams.
+          example: 8
+        temperature:
+          type: integer
+          format: int32
+          description: Brew temperature in °C.
+          example: 93
+        grind:
+          type: string
+          description: Grind level (enum name from domain, e.g., FINE).
+          example: FINE
+        brewSeconds:
+          type: integer
+          format: int32
+          description: Brew duration in seconds.
+          example: 20
+
+    MachineStatus:
+      type: object
+      required:
+        - model
+        - poweredOn
+        - waterCurrent
+        - waterCapacity
+        - beansCurrent
+        - beansCapacity
+        - wasteCurrentPucks
+        - wasteCapacityPucks
+        - brewing
+        - brewElapsedSeconds
+        - brewTotalSeconds
+      properties:
+        model:
+          type: string
+        poweredOn:
+          type: boolean
+        waterCurrent:
+          type: integer
+          format: int32
+          description: Current water level (ml).
+        waterCapacity:
+          type: integer
+          format: int32
+          description: Water tank capacity (ml).
+        beansCurrent:
+          type: integer
+          format: int32
+          description: Current beans level (g).
+        beansCapacity:
+          type: integer
+          format: int32
+          description: Bean hopper capacity (g).
+        wasteCurrentPucks:
+          type: integer
+          format: int32
+          description: Current number of used pucks in the waste bin.
+        wasteCapacityPucks:
+          type: integer
+          format: int32
+          description: Waste bin capacity (pucks).
+        brewing:
+          type: boolean
+          description: Indicates whether a brew is currently in progress.
+        brewRecipeId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Recipe ID for the brew in progress (if any).
+        brewRecipeName:
+          type: string
+          nullable: true
+          description: Recipe name for the brew in progress (if any).
+        brewElapsedSeconds:
+          type: integer
+          format: int32
+          description: Elapsed seconds for the current brew (0 if idle).
+        brewTotalSeconds:
+          type: integer
+          format: int32
+          description: Total seconds for the current brew (0 if idle).
+
+    RefillRequest:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: Resource to refill to maximum capacity (WASTE empties the bin).
+          enum: [WATER, BEANS, WASTE]
+
+    RefillResponse:
+      type: object
+      required: [ok, message]
+      properties:
+        ok:
+          type: boolean
+          description: Whether the refill request was accepted.
+        message:
+          type: string
+          description: Human-readable message.

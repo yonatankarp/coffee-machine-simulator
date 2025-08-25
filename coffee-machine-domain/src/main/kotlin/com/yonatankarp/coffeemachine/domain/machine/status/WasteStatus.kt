@@ -9,4 +9,16 @@ data class WasteStatus(
         val ratio = currentPucks / capacityPucks
         return ratio.coerceIn(0, 100)
     }
+
+    operator fun minus(other: WasteStatus) =
+        WasteStatus(
+            currentPucks = (this.currentPucks - other.currentPucks).coerceAtLeast(0),
+            capacityPucks = this.capacityPucks,
+        )
+
+    operator fun plus(other: WasteStatus) =
+        WasteStatus(
+            currentPucks = (this.currentPucks + other.currentPucks).coerceAtMost(this.capacityPucks),
+            capacityPucks = this.capacityPucks,
+        )
 }

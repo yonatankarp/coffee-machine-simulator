@@ -12,18 +12,20 @@ mockk = "1.14.5"
 spotless = "7.2.1"
 springDependencyManagement = "1.1.7"
 springboot = "3.5.5"
+swagger = "7.14.0"
 
 [libraries]
 
 # Kotlin
-kotlin-jackson = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" , version.ref = "jackson" }
+kotlin-jackson = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 
 # Spring
-springboot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "springboot" }
-springboot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "springboot" }
-springboot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springboot" }
+springboot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+springboot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+springboot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+springboot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 
 # Persistence
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
@@ -45,6 +47,8 @@ kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotl
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
 springboot = { id = "org.springframework.boot", version.ref = "springboot" }
+openapi-generator = { id = "org.openapi.generator", version.ref = "swagger" }
+
 
 [bundles]
 
@@ -61,6 +65,7 @@ persistence-all = [
 
 springboot-all = [
     "springboot-starter-jpa",
+    "springboot-starter-validation",
     "springboot-starter-web",
 ]
 

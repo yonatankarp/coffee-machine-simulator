@@ -10,7 +10,7 @@ create table if not exists recipe (
     brew_seconds  double not null
     );
 
-create table if not exists coffee_machine (
+create table if not exists coffee_machine_status (
     id                      uuid default random_uuid() primary key,
     version                 bigint,
     model                   varchar(255) not null,
@@ -20,7 +20,8 @@ create table if not exists coffee_machine (
     beans_current           double not null,
     waste_capacity_pucks    int not null,
     waste_current_pucks     int not null,
-    powered_on              boolean not null
+    powered_on              boolean not null,
+    is_brewing              boolean not null
 );
 
 create index if not exists idx_recipe_name on recipe(name);

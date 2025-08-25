@@ -8,12 +8,14 @@ data class MachineStatus(
     val water: WaterStatus,
     val beans: BeansStatus,
     val waste: WasteStatus,
+    val isBrewing: Boolean,
 ) {
     companion object {
         fun from(machine: CoffeeMachine) =
             MachineStatus(
                 model = machine.model,
                 poweredOn = machine.poweredOn,
+                isBrewing = machine.isBrewing,
                 water = machine.toWaterStatus(),
                 beans = machine.toBeanStatus(),
                 waste = machine.toWasteStatus(),

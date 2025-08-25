@@ -11,6 +11,7 @@ data class CoffeeMachine(
     val beanHopper: BeanHopper,
     val wasteBin: WasteBin,
     val poweredOn: Boolean = false,
+    val isBrewing: Boolean = false,
 ) {
     fun powerOn() = copy(poweredOn = true)
 
@@ -24,10 +25,12 @@ data class CoffeeMachine(
         waterTank: WaterTank = this.waterTank,
         beanHopper: BeanHopper = this.beanHopper,
         wasteBin: WasteBin = this.wasteBin,
+        isBrewing: Boolean = this.isBrewing,
     ) = copy(
         waterTank = waterTank,
         beanHopper = beanHopper,
         wasteBin = wasteBin,
+        isBrewing = isBrewing,
     )
 
     fun brew(recipe: Recipe): Outcome {
@@ -56,6 +59,7 @@ data class CoffeeMachine(
                 waterTank = newWater,
                 beanHopper = newBeans,
                 wasteBin = newWaste,
+                isBrewing = true,
             )
         return Outcome(updatedMachine = updated, events = events.toList())
     }

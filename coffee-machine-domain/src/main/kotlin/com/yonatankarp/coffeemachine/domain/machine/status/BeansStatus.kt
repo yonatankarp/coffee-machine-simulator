@@ -11,4 +11,16 @@ data class BeansStatus(
         val ratio = current.value / capacity.value
         return (ratio.coerceIn(0.0, 1.0) * 100).toInt()
     }
+
+    operator fun plus(beans: BeansStatus) =
+        BeansStatus(
+            current = (this.current + beans.current).coerceAtMost(this.capacity),
+            capacity = this.capacity,
+        )
+
+    operator fun minus(beans: BeansStatus) =
+        BeansStatus(
+            current = (this.current - beans.current).coerceAtLeast(Grams.ZERO),
+            capacity = this.capacity,
+        )
 }
