@@ -1,6 +1,6 @@
 [versions]
 
-flyway = "11.11.1"
+flyway = "11.11.2"
 h2 = "2.3.232"
 jackson = "2.19.2"
 junit = "5.13.4"
