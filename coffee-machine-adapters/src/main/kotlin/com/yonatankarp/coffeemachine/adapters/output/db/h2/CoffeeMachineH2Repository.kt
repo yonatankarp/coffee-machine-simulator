@@ -3,6 +3,7 @@ package com.yonatankarp.coffeemachine.adapters.output.db.h2
 import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.CoffeeMachineMapper.toDomain
 import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.CoffeeMachineMapper.toEntity
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachine
+import com.yonatankarp.coffeemachine.domain.machine.exception.CoffeeMachineException
 import com.yonatankarp.coffeemachine.domain.machine.port.CoffeeMachineRepository
 import org.springframework.stereotype.Repository
 
@@ -12,7 +13,7 @@ class CoffeeMachineH2Repository(
 ) : CoffeeMachineRepository {
     override fun load(): CoffeeMachine =
         jpaRepository.findAll().firstOrNull()?.toDomain()
-            ?: throw IllegalStateException("No coffee machine") // TODO: handle with domain error
+            ?: throw CoffeeMachineException.NoCoffeeMachineFound()
 
     override fun save(machine: CoffeeMachine): CoffeeMachine = jpaRepository.save(machine.toEntity()).toDomain()
 }

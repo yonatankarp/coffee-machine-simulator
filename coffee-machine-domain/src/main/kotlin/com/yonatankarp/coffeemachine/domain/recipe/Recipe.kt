@@ -1,5 +1,6 @@
 package com.yonatankarp.coffeemachine.domain.recipe
 
+import com.yonatankarp.coffeemachine.domain.recipe.exceptions.RecipeException
 import com.yonatankarp.coffeemachine.domain.shared.unit.Celsius
 import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
@@ -44,9 +45,7 @@ data class Recipe(
                 return entries.firstOrNull { enum ->
                     enum.name == normalized.replace(' ', '_') ||
                         enum.displayName.uppercase() == normalized
-                } ?: throw IllegalArgumentException(
-                    "Unknown recipe: $value. Expected one of: ${entries.joinToString { it.displayName }}",
-                )
+                } ?: throw RecipeException.UnknownRecipeName(value)
             }
         }
     }
