@@ -41,5 +41,6 @@ object MachineStatusFixture {
         water = water,
         beans = beans,
         waste = waste,
+        isBrewing = true,
     )
 }

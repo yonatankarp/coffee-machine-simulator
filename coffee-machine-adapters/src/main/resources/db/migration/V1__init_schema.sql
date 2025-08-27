@@ -10,7 +10,7 @@ create table if not exists recipe (
     brew_seconds  double not null
     );
 
-create table if not exists coffee_machine_status (
+create table if not exists coffee_machine (
     id                      uuid default random_uuid() primary key,
     version                 bigint,
     model                   varchar(255) not null,

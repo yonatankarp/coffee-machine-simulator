@@ -45,22 +45,22 @@ class CommandTest {
 
     @Test
     fun `should parse 'refill water' command`() {
-        Command.parse("refill water") shouldBe Command.RefillWater(null)
+        Command.parse("refill water") shouldBe Command.RefillWater
     }
 
     @Test
     fun `should parse 'refill water' command with amount`() {
-        Command.parse("refill water 500") shouldBe Command.RefillWater(500.0)
+        Command.parse("refill water 500") shouldBe Command.RefillWater
     }
 
     @Test
     fun `should parse 'refill beans' command`() {
-        Command.parse("refill beans") shouldBe Command.RefillBeans(null)
+        Command.parse("refill beans") shouldBe Command.RefillBeans
     }
 
     @Test
     fun `should parse 'refill beans' command with amount`() {
-        Command.parse("refill beans 250") shouldBe Command.RefillBeans(250.0)
+        Command.parse("refill beans 250") shouldBe Command.RefillBeans
     }
 
     @Test
