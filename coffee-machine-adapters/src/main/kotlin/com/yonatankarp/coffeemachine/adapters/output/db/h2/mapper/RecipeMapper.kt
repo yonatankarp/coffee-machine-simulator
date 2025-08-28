@@ -7,7 +7,6 @@ import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.RecipeNameMapp
 import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.RecipeNameMapper.toEntity
 import com.yonatankarp.coffeemachine.domain.recipe.BrewSeconds
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
-import com.yonatankarp.coffeemachine.domain.recipe.RecipeId
 import com.yonatankarp.coffeemachine.domain.shared.unit.Celsius
 import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
@@ -16,7 +15,7 @@ import com.yonatankarp.coffeemachine.domain.shared.unit.Seconds
 object RecipeMapper {
     fun RecipeEntity.toDomain() =
         Recipe(
-            id = RecipeId(id),
+            id = Recipe.Id(id),
             name = name.toDomain(),
             water = Milliliters(water),
             beans = Grams(beans),

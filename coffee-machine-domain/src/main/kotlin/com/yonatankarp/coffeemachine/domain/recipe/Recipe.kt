@@ -4,9 +4,10 @@ import com.yonatankarp.coffeemachine.domain.recipe.exceptions.RecipeException
 import com.yonatankarp.coffeemachine.domain.shared.unit.Celsius
 import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
+import java.util.UUID
 
 data class Recipe(
-    val id: RecipeId,
+    val id: Id,
     val name: Name,
     val water: Milliliters,
     val beans: Grams,
@@ -14,6 +15,17 @@ data class Recipe(
     val grind: GrindSize,
     val brewSeconds: BrewSeconds,
 ) {
+    @JvmInline
+    value class Id(
+        val value: UUID,
+    ) {
+        companion object {
+            fun new() = Id(UUID.randomUUID())
+
+            fun from(value: String) = Id(UUID.fromString(value))
+        }
+    }
+
     enum class GrindSize { FINE, MEDIUM, COARSE }
 
     enum class Name(
