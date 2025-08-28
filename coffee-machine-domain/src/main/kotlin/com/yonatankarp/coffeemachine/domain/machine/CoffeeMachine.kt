@@ -2,9 +2,10 @@ package com.yonatankarp.coffeemachine.domain.machine
 
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
+import java.util.UUID
 
 data class CoffeeMachine(
-    val id: CoffeeMachineId,
+    val id: Id,
     val version: Long,
     val model: Model,
     val waterTank: WaterTank,
@@ -78,4 +79,17 @@ data class CoffeeMachine(
         val updatedMachine: CoffeeMachine,
         val events: List<DomainEvent>,
     )
+
+    @JvmInline
+    value class Id(
+        val value: UUID,
+    ) {
+        companion object {
+            fun default() = Id(UUID.fromString("00000000-0000-0000-0000-000000000000"))
+
+            fun new() = Id(UUID.randomUUID())
+
+            fun from(value: String) = Id(UUID.fromString(value))
+        }
+    }
 }

@@ -2,8 +2,8 @@ package com.yonatankarp.coffeemachine.adapters.output.db.h2
 
 import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.CoffeeMachineMapper.toDomain
 import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.CoffeeMachineMapper.toEntity
+import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachine
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineFixture
-import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineId
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -25,7 +25,7 @@ class CoffeeMachineH2RepositoryTest(
         repository.save(coffeeMachine)
 
         // Then
-        val savedCoffeeMachine = jpaRepository.findByIdOrNull(CoffeeMachineId.default().value)?.toDomain()
+        val savedCoffeeMachine = jpaRepository.findByIdOrNull(CoffeeMachine.Id.default().value)?.toDomain()
         savedCoffeeMachine shouldBe coffeeMachine
     }
 
