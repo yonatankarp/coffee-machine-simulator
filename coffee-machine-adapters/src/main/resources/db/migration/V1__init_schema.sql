@@ -1,6 +1,6 @@
 -- V1: initial schema for coffee-machine simulator (H2)
 
-create table if not exists recipe (
+create table if not exists recipes (
     id            uuid default random_uuid() primary key,
     name          varchar(50) not null unique,
     water         double not null,
@@ -10,7 +10,7 @@ create table if not exists recipe (
     brew_seconds  double not null
     );
 
-create table if not exists coffee_machine (
+create table if not exists coffee_machines (
     id                      uuid default random_uuid() primary key,
     version                 bigint,
     model                   varchar(255) not null,
@@ -23,4 +23,4 @@ create table if not exists coffee_machine (
     powered_on              boolean not null
 );
 
-create index if not exists idx_recipe_name on recipe(name);
+create index if not exists idx_recipe_name on recipes(name);

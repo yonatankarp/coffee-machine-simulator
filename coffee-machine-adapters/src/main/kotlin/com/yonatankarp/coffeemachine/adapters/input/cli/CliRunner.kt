@@ -1,17 +1,18 @@
 package com.yonatankarp.coffeemachine.adapters.input.cli
 
-import com.yonatankarp.coffeemachine.adapters.input.cli.Printers.printEvents
+import com.yonatankarp.coffeemachine.adapters.input.cli.Printers.printProgress
 import com.yonatankarp.coffeemachine.adapters.input.cli.Printers.printRecipes
 import com.yonatankarp.coffeemachine.adapters.input.cli.Printers.printStatus
-import com.yonatankarp.coffeemachine.application.ports.input.BrewCoffee
+import com.yonatankarp.coffeemachine.application.ports.input.AdvanceBrew
 import com.yonatankarp.coffeemachine.application.ports.input.BrowseRecipes
 import com.yonatankarp.coffeemachine.application.ports.input.GetMachineStatus
 import com.yonatankarp.coffeemachine.application.ports.input.ManageMachine
 import com.yonatankarp.coffeemachine.application.ports.input.RefillMachine
+import com.yonatankarp.coffeemachine.application.ports.input.StartBrew
+import com.yonatankarp.coffeemachine.domain.brew.Brew
 import com.yonatankarp.coffeemachine.domain.machine.RefillType
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import io.github.oshai.kotlinlogging.KotlinLogging
-import jakarta.transaction.Transactional
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Component
 @Profile("cli")
 @Component
 class CliRunner(
-    private val brewCoffee: BrewCoffee,
+    private val startBrew: StartBrew,
+    private val advanceBrew: AdvanceBrew,
     private val manageMachine: ManageMachine,
     private val refillMachine: RefillMachine,
     private val getMachineStatus: GetMachineStatus,
@@ -27,7 +29,7 @@ class CliRunner(
 ) : CommandLineRunner {
     private val logger = KotlinLogging.logger {}
 
-    @Transactional
+    //    @Transactional
     override fun run(vararg args: String?) {
         logger.info { "Coffee Machine CLI ☕️" }
         logger.info { Command.help }
@@ -50,19 +52,31 @@ class CliRunner(
                     is Command.RefillWater -> refillMachine(RefillType.WATER).printStatus()
                     is Command.RefillBeans -> refillMachine(RefillType.BEANS).printStatus()
                     is Command.EmptyWaste -> refillMachine(RefillType.WASTE).printStatus()
-                    is Command.Brew -> {
-                        val recipeName =
-                            runCatching { Recipe.Name.from(cmd.recipeName) }
-                                .getOrElse {
-                                    logger.info { "Unknown recipe '${cmd.recipeName}'. Try 'recipes'." }
-                                    null
-                                } ?: continue@loop
-                        brewCoffee(recipeName).printEvents()
-                    }
+                    is Command.Brew -> brewRecipe(cmd)
                 }
             }.onFailure { logger.error { it.message } }
         }
 
         logger.info { "Bye 👋" }
+    }
+
+    private fun brewRecipe(command: Command.Brew) {
+        val recipeName =
+            runCatching { Recipe.Name.from(command.recipeName) }
+                .getOrElse {
+                    logger.info { "Unknown recipe '${command.recipeName}'. Try 'recipes'." }
+                    null
+                } ?: return
+
+        var brew = startBrew(recipeName)
+        brew.printProgress()
+
+        while (brew.state != Brew.State.FINISHED) {
+            Thread.sleep(1000)
+            brew = advanceBrew(brew.id)
+            brew.printProgress()
+        }
+        logger.info { "✅ Done." }
+        getMachineStatus().printStatus()
     }
 }

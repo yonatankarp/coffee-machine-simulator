@@ -28,18 +28,18 @@ sealed interface Command {
     data object EmptyWaste : Command
 
     companion object {
-        val help =
+        val help: String =
             """
-            Commands:
-              help                          - show this help
-              quit                          - exit
-              power on|off                  - turn machine on/off
-              status                        - show machine status
-              recipes                       - list available recipes
-              brew <RECIPE_NAME>            - brew a recipe (e.g., ESPRESSO)
-              refill water [ml]             - refill water tank (full if ml omitted)
-              refill beans [g]              - refill bean hopper (full if g omitted)
-              refill waste                  - empty waste bin
+            Available commands:
+              help                      Show this help
+              power on|off              Turn the machine ON/OFF
+              status                    Show machine status
+              recipes                   List available recipes
+              brew <recipe>             Start a brew and watch progress
+              refill water              Refill the water tank
+              refill beans              Refill the bean hopper
+              empty waste               Empty the waste bin
+              quit                      Exit
             """.trimIndent()
 
         fun parse(line: String): Command? {

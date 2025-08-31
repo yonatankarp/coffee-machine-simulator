@@ -11,7 +11,7 @@ import java.util.UUID
 
 @Entity
 @Immutable
-@Table(name = "recipe")
+@Table(name = "recipes")
 class RecipeEntity(
     @Id
     @Column(name = "id", nullable = false)

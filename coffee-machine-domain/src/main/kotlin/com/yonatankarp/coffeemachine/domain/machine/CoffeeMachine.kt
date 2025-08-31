@@ -1,7 +1,10 @@
 package com.yonatankarp.coffeemachine.domain.machine
 
+import com.yonatankarp.coffeemachine.domain.brew.Brew
+import com.yonatankarp.coffeemachine.domain.brew.Brewer
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
+import java.time.Instant
 import java.util.UUID
 
 data class CoffeeMachine(
@@ -31,34 +34,63 @@ data class CoffeeMachine(
         wasteBin = wasteBin,
     )
 
-    fun brew(recipe: Recipe): Outcome {
-        require(poweredOn) { "Machine is OFF" }
+    /**
+     * Progressive brewing/ticking.
+     *
+     * Ensures beans are consumed up-front when switching STARTED -> BREWING, and water is consumed
+     * gradually according to elapsed time. When time reaches total, the brew is finished and a puck
+     * is added to the waste bin. Returns the updated machine, brew, and emitted domain events.
+     */
+    fun advance(
+        brew: Brew,
+        now: Instant,
+        autoComplete: Boolean = true,
+    ): Outcome {
+        val result =
+            Brewer(
+                initialMachine = this,
+                initialBrew = brew,
+                now = now,
+                autoComplete = autoComplete,
+            ).tick()
+        return Outcome(
+            updatedMachine = result.machine,
+            updatedBrew = result.brew,
+            events = result.events,
+        )
+    }
 
-        val events = mutableListOf<DomainEvent>()
-        events += DomainEvent.HeatingRequested(target = recipe.temperature)
-        events += DomainEvent.GrindingRequested(amount = recipe.beans)
-        events +=
-            DomainEvent.BrewingRequested(
-                recipe = recipe.name,
-                water = recipe.water,
-                duration = recipe.brewSeconds,
+    /**
+     * Legacy single-step brew (kept for compatibility). This now uses [advance] to complete the brew
+     * in one shot, consuming resources progressively but auto-finishing immediately.
+     */
+    fun brew(
+        recipe: Recipe,
+        now: Instant = Instant.now(),
+    ): Outcome {
+        val initial = Brew(machineId = id, recipe = recipe, startedAt = now)
+        var currentMachine = this
+        var currentBrew = initial
+        val collected = mutableListOf<DomainEvent>()
+        // one advance with autoComplete = true will finish immediately based on full time
+        val out =
+            currentMachine.advance(
+                currentBrew,
+                now =
+                    now.plusSeconds(
+                        recipe.brewSeconds.second.value
+                            .toLong(),
+                    ),
+                autoComplete = true,
             )
-
-        val newWater = waterTank.consume(amount = recipe.water)
-        val newBeans = beanHopper.consume(amount = recipe.beans)
-        val newWaste = wasteBin.addPuck()
-
-        events += DomainEvent.ResourcesConsumed(recipe.water, recipe.beans)
-        events += DomainEvent.WastePuckAdded(newWaste.currentPucks)
-        events += DomainEvent.BrewCompleted(recipe.name)
-
-        val updated =
-            with(
-                waterTank = newWater,
-                beanHopper = newBeans,
-                wasteBin = newWaste,
-            )
-        return Outcome(updatedMachine = updated, events = events.toList())
+        currentMachine = out.updatedMachine
+        currentBrew = out.updatedBrew
+        collected += out.events
+        return Outcome(
+            updatedMachine = currentMachine,
+            updatedBrew = currentBrew,
+            events = collected,
+        )
     }
 
     fun refill(type: RefillType): CoffeeMachine =
@@ -77,6 +109,7 @@ data class CoffeeMachine(
 
     data class Outcome(
         val updatedMachine: CoffeeMachine,
+        val updatedBrew: Brew,
         val events: List<DomainEvent>,
     )
 

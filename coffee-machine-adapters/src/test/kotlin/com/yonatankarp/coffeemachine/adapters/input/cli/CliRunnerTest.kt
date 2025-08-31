@@ -1,7 +1,6 @@
 package com.yonatankarp.coffeemachine.adapters.input.cli
 
 import ch.qos.logback.classic.Level
-import com.yonatankarp.coffeemachine.application.ports.input.BrewCoffee
 import com.yonatankarp.coffeemachine.application.ports.input.BrowseRecipes
 import com.yonatankarp.coffeemachine.application.ports.input.GetMachineStatus
 import com.yonatankarp.coffeemachine.application.ports.input.ManageMachine

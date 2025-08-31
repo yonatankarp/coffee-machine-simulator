@@ -29,7 +29,7 @@ value class Seconds(
     companion object {
         val ZERO = Seconds(0.0)
 
-        fun fromMillis(millis: Long): Seconds {
+        fun from(millis: Long): Seconds {
             require(millis >= 0) { "Duration cannot be negative" }
             return Seconds(millis / 1000.0)
         }

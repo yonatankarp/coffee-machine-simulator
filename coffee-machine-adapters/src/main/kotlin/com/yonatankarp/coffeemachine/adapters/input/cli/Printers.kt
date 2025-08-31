@@ -1,9 +1,12 @@
 package com.yonatankarp.coffeemachine.adapters.input.cli
 
+import com.yonatankarp.coffeemachine.domain.brew.Brew
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
 import com.yonatankarp.coffeemachine.domain.machine.status.MachineStatus
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
+import com.yonatankarp.coffeemachine.domain.shared.extension.FormatExtensions.format
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.time.Instant
 
 object Printers {
     private val logger = KotlinLogging.logger {}
@@ -36,5 +39,16 @@ object Printers {
         }
         logger.info { "Events:" }
         forEach { e -> logger.info { "  - $e" } }
+    }
+
+    fun Brew.printProgress(nowSupplier: () -> Instant = { Instant.now() }) {
+        val progress = progress(nowSupplier())
+        val percent = (progress.ratio * 100).toInt()
+        logger.info {
+            val water = "$consumedWater/${recipe.water}"
+            val beans = "$consumedBeans/${recipe.beans}"
+            val time = "${progress.elapsed.value.format("%.1f")}/${progress.total.value.format("%.1f")}"
+            "Progress: $percent% | time=$time | water=$water | beans=$beans | state=$state"
+        }
     }
 }

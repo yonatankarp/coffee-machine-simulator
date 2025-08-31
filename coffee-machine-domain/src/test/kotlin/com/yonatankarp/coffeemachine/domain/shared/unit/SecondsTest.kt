@@ -51,7 +51,7 @@ class SecondsTest {
             val millis = 2500L
 
             // When
-            val seconds = Seconds.fromMillis(millis)
+            val seconds = Seconds.from(millis)
 
             // Then
             seconds shouldBe Seconds(2.5)
@@ -63,7 +63,7 @@ class SecondsTest {
             val millis = -1L
 
             // When
-            val ex = shouldThrow<IllegalArgumentException> { Seconds.fromMillis(millis) }
+            val ex = shouldThrow<IllegalArgumentException> { Seconds.from(millis) }
 
             // Then
             ex.message shouldBe "Duration cannot be negative"
