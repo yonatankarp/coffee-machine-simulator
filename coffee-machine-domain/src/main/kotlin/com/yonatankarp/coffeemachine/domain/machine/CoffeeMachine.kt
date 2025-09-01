@@ -3,7 +3,6 @@ package com.yonatankarp.coffeemachine.domain.machine
 import com.yonatankarp.coffeemachine.domain.brew.Brew
 import com.yonatankarp.coffeemachine.domain.brew.Brewer
 import com.yonatankarp.coffeemachine.domain.machine.event.DomainEvent
-import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import java.time.Instant
 import java.util.UUID
 
@@ -41,7 +40,7 @@ data class CoffeeMachine(
      * gradually according to elapsed time. When time reaches total, the brew is finished and a puck
      * is added to the waste bin. Returns the updated machine, brew, and emitted domain events.
      */
-    fun advance(
+    fun brew(
         brew: Brew,
         now: Instant,
         autoComplete: Boolean = true,
@@ -57,39 +56,6 @@ data class CoffeeMachine(
             updatedMachine = result.machine,
             updatedBrew = result.brew,
             events = result.events,
-        )
-    }
-
-    /**
-     * Legacy single-step brew (kept for compatibility). This now uses [advance] to complete the brew
-     * in one shot, consuming resources progressively but auto-finishing immediately.
-     */
-    fun brew(
-        recipe: Recipe,
-        now: Instant = Instant.now(),
-    ): Outcome {
-        val initial = Brew(machineId = id, recipe = recipe, startedAt = now)
-        var currentMachine = this
-        var currentBrew = initial
-        val collected = mutableListOf<DomainEvent>()
-        // one advance with autoComplete = true will finish immediately based on full time
-        val out =
-            currentMachine.advance(
-                currentBrew,
-                now =
-                    now.plusSeconds(
-                        recipe.brewSeconds.second.value
-                            .toLong(),
-                    ),
-                autoComplete = true,
-            )
-        currentMachine = out.updatedMachine
-        currentBrew = out.updatedBrew
-        collected += out.events
-        return Outcome(
-            updatedMachine = currentMachine,
-            updatedBrew = currentBrew,
-            events = collected,
         )
     }
 

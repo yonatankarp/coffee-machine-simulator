@@ -16,7 +16,7 @@ class AdvanceBrewUseCase(
         val brew = brewRepository.findById(brewId) ?: throw IllegalArgumentException("Unknown brew $brewId")
         val machine = coffeeMachineRepository.load()
 
-        val outcome = machine.advance(brew, now = Instant.now(), autoComplete = true)
+        val outcome = machine.brew(brew, now = Instant.now(), autoComplete = true)
 
         coffeeMachineRepository.save(outcome.updatedMachine)
         brewRepository.save(outcome.updatedBrew)

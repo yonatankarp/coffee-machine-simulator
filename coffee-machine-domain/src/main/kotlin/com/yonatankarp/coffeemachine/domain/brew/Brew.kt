@@ -1,22 +1,20 @@
 package com.yonatankarp.coffeemachine.domain.brew
 
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachine
+import com.yonatankarp.coffeemachine.domain.recipe.BrewSeconds
 import com.yonatankarp.coffeemachine.domain.recipe.Recipe
 import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
-import com.yonatankarp.coffeemachine.domain.shared.unit.Seconds
 import java.time.Instant
 import java.util.UUID
 
 data class Brew(
     val id: Id = Id.new(),
     val machineId: CoffeeMachine.Id,
-    val version: Long = 0,
     val recipe: Recipe,
+    val version: Long = 0,
     val state: State = State.STARTED,
-    val totalSeconds: Int =
-        recipe.brewSeconds.second.value
-            .toInt(),
+    val totalSeconds: BrewSeconds = recipe.brewSeconds,
     val consumedWater: Milliliters = Milliliters.ZERO,
     val consumedBeans: Grams = Grams.ZERO,
     val startedAt: Instant = Instant.now(),
@@ -36,7 +34,7 @@ data class Brew(
         }
     }
 
-    fun progress(now: Instant = Instant.now()): BrewProgress = BrewProgress.of(startedAt, Seconds(totalSeconds.toDouble()), now)
+    fun progress(now: Instant = Instant.now()): BrewProgress = BrewProgress.of(startedAt, totalSeconds.second, now)
 
     fun startBrewing(now: Instant = Instant.now()): Brew =
         when (state) {

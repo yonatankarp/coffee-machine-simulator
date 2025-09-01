@@ -20,7 +20,7 @@ class StartBrewUseCase(
         val machine = coffeeMachineRepository.load()
 
         val brew = Brew(machineId = machine.id, recipe = recipe, startedAt = Instant.now())
-        val outcome = machine.advance(brew, now = Instant.now(), autoComplete = false)
+        val outcome = machine.brew(brew, now = Instant.now(), autoComplete = false)
 
         coffeeMachineRepository.save(outcome.updatedMachine)
         brewRepository.save(outcome.updatedBrew)

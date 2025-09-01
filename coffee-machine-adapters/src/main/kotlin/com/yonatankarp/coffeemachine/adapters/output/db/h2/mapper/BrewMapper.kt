@@ -6,8 +6,10 @@ import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.RecipeMapper.t
 import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.RecipeMapper.toEntity
 import com.yonatankarp.coffeemachine.domain.brew.Brew
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachine
+import com.yonatankarp.coffeemachine.domain.recipe.BrewSeconds
 import com.yonatankarp.coffeemachine.domain.shared.unit.Grams
 import com.yonatankarp.coffeemachine.domain.shared.unit.Milliliters
+import com.yonatankarp.coffeemachine.domain.shared.unit.Seconds
 
 object BrewMapper {
     fun BrewEntity.toDomain() =
@@ -17,7 +19,7 @@ object BrewMapper {
             version = version,
             recipe = recipe.toDomain(),
             state = state.toDomain(),
-            totalSeconds = totalSeconds.toInt(),
+            totalSeconds = BrewSeconds(Seconds(totalSeconds)),
             consumedWater = Milliliters(consumedWater),
             consumedBeans = Grams(consumedBeans),
             startedAt = startedAt,
@@ -32,7 +34,7 @@ object BrewMapper {
             machineId = machineId.value,
             recipe = recipe.toEntity(),
             state = state.toEntity(),
-            totalSeconds = totalSeconds.toDouble(),
+            totalSeconds = totalSeconds.second.value,
             consumedWater = consumedWater.value,
             consumedBeans = consumedBeans.value,
             startedAt = startedAt,
