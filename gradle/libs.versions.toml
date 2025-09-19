@@ -11,7 +11,7 @@ kotlinLogging = "7.0.13"
 mockk = "1.14.5"
 spotless = "7.2.1"
 springDependencyManagement = "1.1.7"
-springboot = "3.5.5"
+springboot = "3.5.6"
 
 [libraries]
 
