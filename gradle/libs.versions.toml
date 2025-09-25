@@ -1,7 +1,7 @@
 [versions]
 
 flyway = "11.13.1"
-h2 = "2.3.232"
+h2 = "2.4.240"
 jackson = "2.20.0"
 junit = "5.13.4"
 jvmTarget = "21"
