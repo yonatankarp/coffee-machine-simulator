@@ -2,7 +2,7 @@
 
 flyway = "11.15.0"
 h2 = "2.4.240"
-jackson = "2.20.0"
+jackson = "2.20.1"
 junit = "6.0.0"
 jvmTarget = "21"
 kotest = "6.0.4"
