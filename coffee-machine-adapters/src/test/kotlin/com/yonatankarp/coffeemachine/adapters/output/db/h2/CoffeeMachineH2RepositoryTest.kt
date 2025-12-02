@@ -5,16 +5,31 @@ import com.yonatankarp.coffeemachine.adapters.output.db.h2.mapper.CoffeeMachineM
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachine
 import com.yonatankarp.coffeemachine.domain.machine.CoffeeMachineFixture
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.TestConstructor
+import org.springframework.transaction.annotation.Transactional
 
-@DataJpaTest(showSql = true)
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.NONE,
+    properties = [
+        "spring.main.web-application-type=none",
+        "spring.flyway.enabled=true",
+        "spring.jpa.hibernate.ddl-auto=none",
+    ],
+)
+@Transactional
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class CoffeeMachineH2RepositoryTest(
     private val jpaRepository: CoffeeMachineH2JpaRepository,
 ) {
+    @BeforeEach
+    fun setUp() {
+        jpaRepository.deleteAll()
+    }
+
     @Test
     fun `should save coffee machine`() {
         // Given
@@ -33,13 +48,13 @@ class CoffeeMachineH2RepositoryTest(
     fun `should load existing coffee machine`() {
         // Given
         val coffeeMachine = CoffeeMachineFixture.defaultMachine()
-        jpaRepository.save(coffeeMachine.toEntity())
+        val savedEntity = jpaRepository.save(coffeeMachine.toEntity())
         val repository = CoffeeMachineH2Repository(jpaRepository)
 
         // When
         val loadedCoffeeMachine = repository.load()
 
         // Then
-        loadedCoffeeMachine shouldBe coffeeMachine.copy(version = coffeeMachine.version + 1)
+        loadedCoffeeMachine shouldBe savedEntity.toDomain()
     }
 }

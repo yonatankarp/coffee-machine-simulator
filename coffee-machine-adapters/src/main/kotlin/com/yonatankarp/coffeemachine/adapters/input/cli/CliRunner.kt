@@ -28,7 +28,7 @@ class CliRunner(
     private val logger = KotlinLogging.logger {}
 
     @Transactional
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         logger.info { "Coffee Machine CLI ☕️" }
         logger.info { Command.help }
 
