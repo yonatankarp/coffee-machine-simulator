@@ -1,6 +1,5 @@
 [versions]
 
-flyway = "11.18.0"
 h2 = "2.4.240"
 jackson = "2.20.1"
 junit = "6.0.1"
@@ -21,12 +20,14 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 
 # Spring
+springboot-starter-flyway = { module = "org.springframework.boot:spring-boot-starter-flyway", version.ref = "springboot" }
+springboot-starter-flyway-test = { module = "org.springframework.boot:spring-boot-starter-flyway-test", version.ref = "springboot" }
 springboot-starter-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "springboot" }
+springboot-starter-jpa-test = { module = "org.springframework.boot:spring-boot-starter-data-jpa-test", version.ref = "springboot" }
 springboot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "springboot" }
 springboot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springboot" }
 
 # Persistence
-flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 h2-database = { module = "com.h2database:h2", version.ref = "h2" }
 
 # Logging
@@ -55,11 +56,11 @@ kotlin-all = [
 ]
 
 persistence-all = [
-    "flyway-core",
     "h2-database",
 ]
 
 springboot-all = [
+    "springboot-starter-flyway",
     "springboot-starter-jpa",
     "springboot-starter-web",
 ]
@@ -71,5 +72,7 @@ unittest-all = [
 
 test-integration-all = [
     "mockk",
+    "springboot-starter-flyway-test",
+    "springboot-starter-jpa-test",
     "springboot-starter-test",
 ]
