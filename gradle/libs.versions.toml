@@ -1,7 +1,7 @@
 [versions]
 
 h2 = "2.4.240"
-jackson = "2.20.1"
+jackson = "2.21.0"
 junit = "6.0.2"
 jvmTarget = "21"
 kotest = "6.0.7"
