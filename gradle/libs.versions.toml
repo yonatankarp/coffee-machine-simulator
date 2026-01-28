@@ -8,7 +8,7 @@ kotest = "6.1.1"
 kotlin = "2.3.0"
 kotlinLogging = "7.0.14"
 mockk = "1.14.9"
-spotless = "8.2.0"
+spotless = "8.2.1"
 springDependencyManagement = "1.1.7"
 springboot = "4.0.2"
 
